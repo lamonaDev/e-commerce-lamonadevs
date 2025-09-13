@@ -1,0 +1,164 @@
+/* Enhanced responsive styles and animations for brands page */
+
+/* Smooth animations for brand cards */
+.brandCard {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.brandCard:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Focus styles for accessibility */
+.brandCard:focus-within {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Search input enhanced styles */
+.searchInput {
+  transition: all 0.2s ease-in-out;
+}
+
+.searchInput:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: #3b82f6;
+}
+
+/* Grid animations */
+.brandsGrid {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stagger animation for cards */
+.brandCardItem:nth-child(1) { animation-delay: 0.1s; }
+.brandCardItem:nth-child(2) { animation-delay: 0.2s; }
+.brandCardItem:nth-child(3) { animation-delay: 0.3s; }
+.brandCardItem:nth-child(4) { animation-delay: 0.4s; }
+.brandCardItem:nth-child(5) { animation-delay: 0.5s; }
+.brandCardItem:nth-child(6) { animation-delay: 0.6s; }
+.brandCardItem:nth-child(7) { animation-delay: 0.7s; }
+.brandCardItem:nth-child(8) { animation-delay: 0.8s; }
+
+.brandCardItem {
+  animation: slideInUp 0.6s ease-out both;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Loading skeleton improvements */
+.skeletonPulse {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@media (prefers-color-scheme: dark) {
+  .skeletonPulse {
+    background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+    background-size: 200% 100%;
+  }
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Enhanced mobile responsiveness */
+@media (max-width: 640px) {
+  .brandsHeader h1 {
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+  
+  .brandsHeader p {
+    font-size: 1rem;
+  }
+  
+  .searchContainer input {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .brandCard {
+    border: 2px solid currentColor;
+  }
+  
+  .brandCard:hover {
+    border-color: #3b82f6;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .brandCard {
+    transition: none;
+  }
+  
+  .brandCard:hover {
+    transform: none;
+  }
+  
+  .brandsGrid,
+  .brandCardItem {
+    animation: none;
+  }
+  
+  .skeletonPulse {
+    animation: none;
+    background: #f0f0f0;
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    .skeletonPulse {
+      background: #374151;
+    }
+  }
+}
+
+/* Print styles */
+@media print {
+  .brandsPage {
+    background: white;
+  }
+  
+  .brandCard {
+    box-shadow: none;
+    border: 1px solid #ccc;
+    break-inside: avoid;
+    margin-bottom: 1rem;
+  }
+  
+  .brandsControls,
+  .loadMore {
+    display: none;
+  }
+}
