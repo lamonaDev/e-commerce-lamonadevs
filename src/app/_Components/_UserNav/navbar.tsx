@@ -61,15 +61,17 @@ function UserNavBarContent() {
         return { numOfCartItems: 0 };
       }
     },
-    select: (data: CartData) => {
-      setNumberOfCart(data.numOfCartItems || 0);
-      return data.numOfCartItems || 0;
-    },
     enabled: !!userToken,
     retry: 1,
     refetchOnMount: true,
     refetchOnWindowFocus: true,
   });
+
+  useEffect(() => {
+    if (cartData) {
+      setNumberOfCart(cartData.numOfCartItems || 0);
+    }
+  }, [cartData, setNumberOfCart]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -111,7 +113,7 @@ function UserNavBarContent() {
       opacity: 1,
       y: 0,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 100,
         damping: 10,
       },
@@ -123,7 +125,6 @@ function UserNavBarContent() {
       opacity: 1,
       height: "auto",
       transition: {
-        type: "spring",
         stiffness: 200,
         damping: 20,
       },
@@ -132,7 +133,6 @@ function UserNavBarContent() {
       opacity: 0,
       height: 0,
       transition: {
-        type: "spring",
         stiffness: 200,
         damping: 20,
       },

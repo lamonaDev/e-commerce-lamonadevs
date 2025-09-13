@@ -5,7 +5,7 @@ import { useContext, useState, useEffect } from "react";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { ContextTestData, ContextTestDataNumber } from "../../../../types/ContextTestData";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion"; // Import Variants instead of AnimationGeneratorType
 import { FaBars, FaTimeline } from "react-icons/fa6";
 import { usePathname } from "next/navigation";
 
@@ -32,20 +32,20 @@ export default function WelcomeNavBarComponent() {
     setIsMenuOpen(false);
   }, [pathname]);
 
-  const navVariants = {
+  const navVariants: Variants = {
     hidden: { opacity: 0, y: -20 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        type: "spring",
         stiffness: 100,
         damping: 10,
+        type: "spring", // Remove `as const`
       },
     },
   };
 
-  const mobileMenuVariants = {
+  const mobileMenuVariants: Variants = {
     open: {
       opacity: 1,
       height: "auto",
@@ -59,7 +59,6 @@ export default function WelcomeNavBarComponent() {
       opacity: 0,
       height: 0,
       transition: {
-        type: "spring",
         stiffness: 200,
         damping: 20,
       },
