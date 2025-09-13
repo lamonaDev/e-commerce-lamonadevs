@@ -216,7 +216,7 @@ export default function CheckOutPage() {
               <FiShoppingBag size={60} className="mx-auto" />
             </div>
             <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-2">Error Loading Cart</h2>
-            <p className="text-gray-600 dark:text-gray-400">We couldn't load your cart. Please try again later.</p>
+            <p className="text-gray-600 dark:text-gray-400">We could not load your cart. Please try again later.</p>
           </div>
         </div>
       </div>

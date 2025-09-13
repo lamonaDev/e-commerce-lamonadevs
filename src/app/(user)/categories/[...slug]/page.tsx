@@ -145,7 +145,7 @@ function HomeContent() {
             </svg>
           </div>
           <h2 className="text-xl font-bold text-gray-800 mb-2">No Products Found</h2>
-          <p className="text-gray-600 mb-6">This category doesn't have any products yet.</p>
+          <p className="text-gray-600 mb-6">This category dose not have any products yet.</p>
           <button
             onClick={() => router.push('/categories')}
             className="flex items-center justify-center px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition"

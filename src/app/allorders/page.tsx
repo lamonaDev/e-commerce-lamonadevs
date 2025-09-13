@@ -334,7 +334,7 @@ export default function AllOrdersPage() {
 
             <h2 className="text-2xl font-bold text-gray-800 mb-2">No Orders Found</h2>
             <p className="text-gray-600 mb-6 max-w-md mx-auto">
-              You haven't placed any orders yet. When you do, they'll appear here.
+              You have not placed any orders yet. When you do, they all appear here.
             </p>
 
             <motion.div
@@ -466,8 +466,6 @@ export default function AllOrdersPage() {
                   </div>
                 </div>
               </div>
-
-              {/* Order Details - Expanded Content */}
               <AnimatePresence>
                 {expandedOrderId === order._id && (
                   <motion.div
@@ -484,13 +482,11 @@ export default function AllOrdersPage() {
                         animate="visible"
                         className="grid grid-cols-1 lg:grid-cols-2 gap-6"
                       >
-                        {/* Order Items */}
                         <motion.div variants={itemVariants}>
                           <h3 className="font-medium text-gray-800 mb-4 flex items-center gap-2">
                             <ShoppingBag className="w-5 h-5 text-gray-600" />
                             Order Items ({order.cartItems.length})
                           </h3>
-
                           <div className="space-y-4">
                             {order.cartItems.map((item) => (
                               <motion.div
@@ -521,14 +517,12 @@ export default function AllOrdersPage() {
                             ))}
                           </div>
                         </motion.div>
-
                         <motion.div variants={itemVariants} className="space-y-6">
                           <div className="bg-gray-50 rounded-lg p-4">
                             <h3 className="font-medium text-gray-800 mb-3 flex items-center gap-2">
                               <DollarSign className="w-5 h-5 text-gray-600" />
                               Order Summary
                             </h3>
-
                             <div className="space-y-2">
                               <div className="flex justify-between">
                                 <span className="text-gray-600">Subtotal</span>
@@ -550,8 +544,6 @@ export default function AllOrdersPage() {
                               </div>
                             </div>
                           </div>
-
-                          {/* Shipping Address */}
                           <div className="bg-gray-50 rounded-lg p-4">
                             <h3 className="font-medium text-gray-800 mb-3 flex items-center gap-2">
                               <Truck className="w-5 h-5 text-gray-600" />

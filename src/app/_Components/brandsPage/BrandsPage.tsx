@@ -35,7 +35,6 @@ export default function BrandsPage() {
       setMetadata(response.metadata);
       setCurrentPage(page);
     } catch (err) {
-      console.error('Error fetching brands:', err);
       setError('Failed to load brands. Please try again.');
     } finally {
       setIsLoading(false);
@@ -48,11 +47,10 @@ export default function BrandsPage() {
       setIsLoading(true);
       setError(null);
       
-      const response = await BrandsApiService.getAllBrands(200); // Limit to 200 brands for performance
+      const response = await BrandsApiService.getAllBrands(200); 
       setAllBrands(response.data);
       setMetadata(response.metadata);
     } catch (err) {
-      console.error('Error fetching all brands:', err);
       setError('Failed to load brands. Please try again.');
     } finally {
       setIsLoading(false);
@@ -105,7 +103,7 @@ export default function BrandsPage() {
             </Button>
           </div>
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Discover amazing products from the world's most trusted brands
+            Discover amazing products from the world  most trusted brands
             {metadata && (
               <span className="block text-sm mt-2">
                 {metadata.numberOfPages} pages • {allBrands.length} brands loaded
@@ -187,7 +185,6 @@ export default function BrandsPage() {
         </div>
         <section aria-label={`Brand results - ${filteredBrands.length} brands found`}>
           {isLoading ? (
-            /* Loading State */
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {[...Array(12)].map((_, i) => (
                 <div key={i} className="animate-pulse">
@@ -227,7 +224,7 @@ export default function BrandsPage() {
                   No brands found
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400 mb-6">
-                  We couldn't find any brands matching "{searchTerm}". 
+                  We could not find any brands matching {searchTerm}. 
                   Try adjusting your search terms.
                 </p>
                 <Button 

@@ -195,7 +195,6 @@ export default function ProductCard({
       transition={{ duration: 0.3 }}
       className={`product-card group relative bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200 dark:border-gray-700 overflow-hidden h-full flex flex-col ${className}`}
     >
-      {/* Wishlist Button */}
       <button
         onClick={handleToggleWishlist}
         disabled={isUpdatingWishlist}
@@ -208,15 +207,11 @@ export default function ProductCard({
       >
         <Heart className={`w-4 h-4 md:w-5 md:h-5 ${isWishlisted ? "fill-current" : ""}`} />
       </button>
-
-      {/* Discount Badge */}
       {discountPercentage > 0 && (
         <div className="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
           {discountPercentage}% OFF
         </div>
       )}
-
-      {/* Product Image */}
       <Link href={`/home/products/${product._id}`} className="block flex-1">
         <div className="relative w-full h-48 sm:h-56 md:h-64 bg-gray-100 dark:bg-gray-700 overflow-hidden">
           {imageLoading && (
@@ -252,8 +247,6 @@ export default function ProductCard({
               </div>
             </div>
           )}
-
-          {/* Quick View Overlay */}
           <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
             <Button
               as={Link}
@@ -268,10 +261,7 @@ export default function ProductCard({
           </div>
         </div>
       </Link>
-
-      {/* Product Details */}
       <div className="p-3 md:p-4">
-        {/* Category and Brand */}
         <div className="flex items-center justify-between mb-1">
           {product.category?.name && (
             <span className="text-xs md:text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full truncate">
@@ -284,23 +274,17 @@ export default function ProductCard({
             </span>
           )}
         </div>
-
-        {/* Product Title */}
         <Link href={`/home/products/${product._id}`} className="block">
           <h3 className="font-medium text-gray-900 dark:text-white text-sm md:text-base line-clamp-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 mb-1">
             {product.title}
           </h3>
         </Link>
-
-        {/* Ratings */}
         <div className="flex items-center gap-1 md:gap-2 my-1">
           <div className="flex items-center">{renderStars(product.ratingsAverage)}</div>
           <span className="text-xs md:text-sm text-gray-600 dark:text-gray-400">
             ({product.ratingsQuantity})
           </span>
         </div>
-
-        {/* Price */}
         <div className="mb-2">
           {product.priceAfterDiscount ? (
             <div className="flex items-center gap-2">
@@ -322,8 +306,6 @@ export default function ProductCard({
             </span>
           )}
         </div>
-
-        {/* Add to Cart Button */}
         <Button
           onClick={handleAddToCart}
           disabled={isAddingToCart || product.quantity === 0}
@@ -350,8 +332,6 @@ export default function ProductCard({
             </>
           )}
         </Button>
-
-        {/* Stock Status */}
         <div className="mt-1 text-center">
           {product.quantity > 0 ? (
             <span className="text-xs text-green-600 dark:text-green-400">

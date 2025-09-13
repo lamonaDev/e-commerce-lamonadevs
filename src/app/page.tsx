@@ -124,7 +124,6 @@ export default function Home() {
   return (
     <>
       <WelcomeNavBarComponent />
-
       <section className="hero-section relative overflow-hidden bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 py-16 md:py-24 lg:py-32">
         <div className="absolute -top-10 -left-10 w-40 h-40 bg-purple-200 dark:bg-purple-900 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
         <div className="absolute -bottom-10 -right-10 w-60 h-60 bg-blue-200 dark:bg-blue-900 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
@@ -201,8 +200,6 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
-
-      {/* Stats Section */}
       <section className="stats-section py-12 md:py-16 bg-white dark:bg-gray-800">
         <div className="container mx-auto px-4 md:px-6 lg:px-8">
           <motion.div
@@ -372,7 +369,7 @@ export default function Home() {
               transition={{ delay: 0.2 }}
               className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto px-4"
             >
-              We're committed to providing the best shopping experience
+              We are committed to providing the best shopping experience
             </motion.p>
           </motion.div>
 

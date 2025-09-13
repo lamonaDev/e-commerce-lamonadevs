@@ -11,34 +11,57 @@ import { GoSignOut } from "react-icons/go";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
 
+interface NavItem {
+  name: string;
+  href: string;
+  icon: React.ReactNode | null;
+  onClick?: () => void;
+  danger?: boolean;
+}
+
+interface CartData {
+  numOfCartItems: number;
+}
+
+interface MainContextType {
+  userToken: string | null;
+  setUserToken: (token: string | null) => void;
+  numberOfCart: number;
+  setNumberOfCart: (value: number) => void;
+  invalidateCart: () => void;
+}
+
 function UserNavBarContent() {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { setUserToken, userToken, numberOfCart, setNumberOfCart, invalidateCart } = useContext(MainContext) as {
-    userToken: string | null;
-    setUserToken: (token: string | null) => void;
-    numberOfCart: number;
-    setNumberOfCart: (value: number) => void;
-    invalidateCart: () => void;
-  };
 
-  const { data: cartData } = useQuery({
+  const context = useContext(MainContext) as MainContextType;
+  const { setUserToken, userToken, numberOfCart, setNumberOfCart, invalidateCart } = context;
+
+  const { data: cartData } = useQuery<CartData>({
     queryKey: ["cartItemCount", userToken],
-    queryFn: async () => {
+    queryFn: async (): Promise<CartData> => {
       if (!userToken) return { numOfCartItems: 0 };
-      const response = await fetch("https://ecommerce.routemisr.com/api/v1/cart", {
-        headers: {
-          token: userToken,
-        },
-      });
-      if (!response.ok) {
-        throw new Error("Failed to fetch cart");
+
+      try {
+        const response = await fetch("https://ecommerce.routemisr.com/api/v1/cart", {
+          headers: {
+            token: userToken,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch cart");
+        }
+
+        return await response.json() as CartData;
+      } catch (error) {
+        console.error("Error fetching cart:", error);
+        return { numOfCartItems: 0 };
       }
-      const data = await response.json();
-      return data;
     },
-    select: (data) => {
+    select: (data: CartData) => {
       setNumberOfCart(data.numOfCartItems || 0);
       return data.numOfCartItems || 0;
     },
@@ -66,11 +89,13 @@ function UserNavBarContent() {
   }, [pathname]);
 
   function handleLogout() {
-    typeof window !== "undefined" && localStorage.removeItem("userToken");
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("userToken");
+    }
     setUserToken(null);
   }
 
-  const navItems = [
+  const navItems: NavItem[] = [
     { name: "Home", href: "/home", icon: null },
     { name: "Cart", href: "/cart", icon: <RiShoppingBasket2Fill size={18} className="mr-2" /> },
     { name: "Brands", href: "/brands", icon: null },
@@ -114,7 +139,7 @@ function UserNavBarContent() {
     },
   };
 
-  const cartItemCount = cartData || 0;
+  const cartItemCount = cartData?.numOfCartItems || numberOfCart || 0;
 
   return (
     <>

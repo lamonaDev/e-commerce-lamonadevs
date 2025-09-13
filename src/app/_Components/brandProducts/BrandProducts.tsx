@@ -197,7 +197,7 @@ export default function BrandProducts({ brand, className = "" }: BrandProductsPr
                 No Products Found
               </h3>
               <p className="text-gray-600 dark:text-gray-400 mb-6">
-                {brand.name} doesn't have any products available at the moment. 
+                {brand.name} dose not have any products available at the moment. 
                 Check back later for new arrivals.
               </p>
               <Button 

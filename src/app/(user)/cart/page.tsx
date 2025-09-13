@@ -381,7 +381,7 @@ export default function CartPage() {
 
                 <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-3">Your cart is empty</h2>
                 <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto">
-                  Looks like you haven't added any items to your cart yet. Let's change that!
+                  Looks like you have not added any items to your cart yet. change that!
                 </p>
 
                 <motion.div

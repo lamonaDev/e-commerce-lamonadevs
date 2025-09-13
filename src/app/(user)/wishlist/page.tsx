@@ -239,7 +239,7 @@ function WishlistContent() {
               </svg>
             </div>
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">Your wishlist is empty</h2>
-            <p className="text-gray-600 mb-8">Looks like you haven't added any items to your wishlist yet.</p>
+            <p className="text-gray-600 mb-8">Looks like you have not added any items to your wishlist yet.</p>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
