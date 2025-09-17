@@ -21,6 +21,7 @@ import ProductCard, { Product } from "../../_Components/productCard/productCard"
 import ProductsApiService, { ProductsApiResponse } from "../../_Services/productsApi";
 import toast from "react-hot-toast";
 import { ProductFromCat } from "../categories/[...slug]/page";
+import { ProtectedRoute } from "@/_routes/route.route";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -121,7 +122,7 @@ export default function Home() {
   if (!isMounted) return null;
 
   return (
-    <>
+    <ProtectedRoute>
       <section className="hero-section relative overflow-hidden bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 py-16 md:py-24 lg:py-32">
         <div className="absolute -top-10 -left-10 w-40 h-40 bg-purple-200 dark:bg-purple-900 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
         <div className="absolute -bottom-10 -right-10 w-60 h-60 bg-blue-200 dark:bg-blue-900 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
@@ -444,6 +445,6 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
-    </>
+    </ProtectedRoute>
   );
 }
