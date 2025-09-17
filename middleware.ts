@@ -9,7 +9,7 @@ export default async function middleware(req: NextRequest) {
   const isProtectedRoute = protectedRoutes.includes(path);
   const isPublicRoute = publicRoutes.includes(path);
   const cookieStore = await cookies();
-  const token = window.localStorage.getItem("token") || null;
+  const token = cookieStore.get('token')?.value || null;
   if (isProtectedRoute && !token) {
     return NextResponse.redirect(new URL('/login', req.nextUrl));
   }
