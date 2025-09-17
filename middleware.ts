@@ -1,5 +1,5 @@
+"use server";
 import { NextRequest, NextResponse } from 'next/server';
-
 const protectedRoutes = ['/home', '/brands', '/cart', '/categories', '/allorders', '/wishlist', '/user'];
 const publicRoutes = ['/login', '/signup', '/'];
 
@@ -21,7 +21,6 @@ export default async function middleware(req: NextRequest) {
 
   return NextResponse.next();
 }
-
 export const config = {
   matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
 };
