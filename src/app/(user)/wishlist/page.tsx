@@ -3,11 +3,12 @@ import { ProtectedRoute } from "@/_routes/route.route";
 import { Suspense, useContext } from "react";
 import { MainContext } from "@/app/_Context/MainContext";
 import { QueryClient, QueryClientProvider, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import axios, {AxiosError} from "axios";
 import toast from "react-hot-toast";
 import ProductCard, { Product } from "../../_Components/productCard/productCard";
 import { Heart, ShoppingCart, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ProductFromCat } from "../categories/[...slug]/page";
 
 type WishlistResponse = {
   data: Product[];
@@ -56,7 +57,7 @@ function WishlistContent() {
       });
       queryClient.invalidateQueries({ queryKey: ["wishlist"] });
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{message: string}>) => {
       toast.error(error.response?.data?.message || "Failed to add to wishlist", {
         style: {
           borderRadius: '10px',
@@ -88,7 +89,7 @@ function WishlistContent() {
       });
       queryClient.invalidateQueries({ queryKey: ["wishlist"] });
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{message: string}>) => {
       toast.error(error.response?.data?.message || "Failed to remove from wishlist", {
         style: {
           borderRadius: '10px',
@@ -99,7 +100,7 @@ function WishlistContent() {
     },
   });
 
-  const handleToggleWishlist = async (product: Product) => {
+  const handleToggleWishlist = async (product: ProductFromCat) => {
     if (!userToken) {
       toast.error("Please log in to modify wishlist", {
         style: {
@@ -144,7 +145,7 @@ function WishlistContent() {
       y: 0,
       opacity: 1,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 100
       }
     }

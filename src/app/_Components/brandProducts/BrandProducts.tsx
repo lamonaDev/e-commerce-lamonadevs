@@ -5,6 +5,7 @@ import { Button } from "@heroui/react";
 import { Grid3X3, List, RefreshCw, Package } from "lucide-react";
 import ProductsApiService, { ProductsApiResponse } from "../../_Services/productsApi";
 import { Brand } from "../brandCard/BrandCard";
+import { ProductFromCat } from "@/app/(user)/categories/[...slug]/page";
 
 interface BrandProductsProps {
   brand: Brand;
@@ -60,11 +61,11 @@ export default function BrandProducts({ brand, className = "" }: BrandProductsPr
     fetchBrandProducts(1, true);
   };
 
-  const handleAddToCart = async (product: Product) => {
+  const handleAddToCart = async (product: ProductFromCat) => {
     // console.log('Adding to cart:', product.title);
   };
 
-  const handleAddToWishlist = async (product: Product) => {
+  const handleAddToWishlist = async (product: ProductFromCat) => {
     // console.log('Adding to wishlist:', product.title);
   };
 

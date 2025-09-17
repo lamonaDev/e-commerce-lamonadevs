@@ -46,9 +46,8 @@ const itemVariants = {
     y: 0,
     opacity: 1,
     transition: {
-      type: "spring",
-      stiffness: 100,
-      damping: 12
+      type: "spring" as const,
+      stiffness: 100
     }
   }
 };
@@ -94,7 +93,7 @@ export default function CartPage() {
           }
         });
       }
-    } catch (error) {
+    } catch (error: unknown) {
       toast.error("Error loading your cart", {
         icon: <AlertCircle className="w-5 h-5 text-red-500" />,
         style: {
@@ -155,7 +154,7 @@ export default function CartPage() {
           }
         });
       }
-    } catch (error) {
+    } catch (error: unknown) {
       toast.error("Error updating item quantity", {
         icon: <AlertCircle className="w-5 h-5 text-red-500" />,
         style: {

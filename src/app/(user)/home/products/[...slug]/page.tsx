@@ -127,7 +127,6 @@ function SpicificProductContent() {
             <h3 className="text-xl font-semibold mb-4 text-gray-800">Product Description</h3>
             <p className="text-gray-600 leading-relaxed">{product.description}</p>
           </div>
-
           <div className="bg-white p-6 rounded-xl shadow">
             <h3 className="text-xl font-semibold mb-4 text-gray-800">Product Details</h3>
             <div className="space-y-3">

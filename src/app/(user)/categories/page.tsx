@@ -3,7 +3,7 @@ import { ProtectedRoute } from "@/_routes/route.route";
 import { Suspense, useContext, useState } from "react";
 import { MainContext } from "@/app/_Context/MainContext";
 import { QueryClient, QueryClientProvider, useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -16,16 +16,22 @@ type Category = {
 };
 
 type ApiResponse = {
-  data?: Category[];
+  results: number;
+  metadata: {
+    currentPage: number;
+    numberOfPages: number;
+    limit: number;
+  };
+  data: Category[];
 };
 
 function CategoryContent() {
   const { userToken } = useContext(MainContext) as { userToken: string | null };
   const [categories, setCategories] = useState<Category[] | null>(null);
 
-  const mutation = useMutation<ApiResponse, Error>({
+  const mutation = useMutation<ApiResponse, Error, void>({
     mutationFn: async () => {
-      const res = await axios.get("https://ecommerce.routemisr.com/api/v1/categories");
+      const res: AxiosResponse<ApiResponse> = await axios.get("https://ecommerce.routemisr.com/api/v1/categories");
       return res.data;
     },
     onSuccess: (data) => {
@@ -52,17 +58,16 @@ function CategoryContent() {
   };
 
   const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 10
-      }
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: "spring" as const,
+      stiffness: 100
     }
-  };
+  }
+};
 
   return (
     <Suspense fallback={
@@ -85,7 +90,7 @@ function CategoryContent() {
           </p>
         </motion.div>
 
-        {mutation.isLoading && (
+        {mutation.isPending && (
           <div className="flex justify-center items-center py-12">
             <div className="flex space-x-2">
               {[...Array(3)].map((_, i) => (

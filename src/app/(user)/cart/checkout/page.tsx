@@ -2,7 +2,7 @@
 import { useContext, useState } from "react";
 import { MainContext } from "@/app/_Context/MainContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import axios, {AxiosError} from "axios";
 import toast from "react-hot-toast";
 import { Button } from "@heroui/react";
 import { RadioGroup, Radio } from "@heroui/react";
@@ -39,7 +39,7 @@ function CartItemDisplay({ item }: { item: CartItem }) {
           </span>
           {item.product.price && (
             <span className="text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-0.5 rounded-full">
-              {Math.round(((item.product.price - item.price) / item.product.price) * 100)}% OFF
+              {Math.round(((Number(item.product.price) - Number(item.price)) / Number(item.product.price)) * 100)}% OFF
             </span>
           )}
         </div>
@@ -96,17 +96,16 @@ export default function CheckOutPage() {
       invalidateCart();
       queryClient.invalidateQueries({ queryKey: ["cart"] });
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{message: string}>) => {
       toast.error(error.response?.data?.message || "Failed to clear cart");
     },
   });
 
   const placeOrderMutation = useMutation({
     mutationFn: async () => {
-      if (!userToken) return toast.error("User not authenticated");
-      if (!selectedAddress) return toast.error("Please select a shipping address");
+      if (!userToken) throw new Error("User not authenticated");
+      if (!selectedAddress) throw new Error("Please select a shipping address");
       if (!cartData?.data._id) throw new Error("Cart not found");
-
       const shippingAddressData = {
         shippingAddress: {
           details: selectedAddress.details,
@@ -114,7 +113,6 @@ export default function CheckOutPage() {
           city: selectedAddress.city,
         },
       };
-
       if (paymentMethod === "cash") {
         const response = await axios.post(
           `https://ecommerce.routemisr.com/api/v1/orders/${cartData.data._id}`,
@@ -127,7 +125,14 @@ export default function CheckOutPage() {
           }
         );
         clearCartMutation.mutate();
-        return { data: response.data, paymentMethod: "cash" };
+        return {
+          paymentMethod: "cash",
+          data: {
+            session: {
+              url: "",
+            },
+          },
+        };
       } else {
         const response = await axios.post(
           `https://ecommerce.routemisr.com/api/v1/orders/checkout-session/${cartData.data._id}?url=http://localhost:3000`,
@@ -139,10 +144,17 @@ export default function CheckOutPage() {
             },
           }
         );
-        return { data: response.data, paymentMethod: "online" };
+        return {
+          paymentMethod: "online",
+          data: {
+            session: {
+              url: response.data.session.url,
+            },
+          },
+        };
       }
     },
-    onSuccess: (result) => {
+    onSuccess: (result: { paymentMethod: string; data:{ session: {url: string} }}) => {
       toast.success("Order placed successfully");
       if (result.paymentMethod === "online" && result.data.session && result.data.session.url) {
         window.location.href = result.data.session.url;
@@ -150,7 +162,7 @@ export default function CheckOutPage() {
         toast.success("Cash order placed successfully!");
       }
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{message: string}>) => {
       toast.error(error.response?.data?.message || "Failed to place order");
     },
   });

@@ -19,6 +19,7 @@ export interface CartItemBrand {
 export interface CartItemProduct {
   subcategory: CartItemSubcategory[];
   _id: string;
+  price: string
   title: string;
   quantity: number;
   imageCover: string;
@@ -27,7 +28,55 @@ export interface CartItemProduct {
   ratingsAverage: number;
   id: string;
 }
+export type Subcategory = {
+  _id: string;
+  name: string;
+  slug: string;
+  category: string;
+};
 
+export type Brand = {
+  _id: string;
+  name: string;
+  slug: string;
+  image?: string;
+};
+
+export type Category = {
+  _id: string;
+  name: string;
+  slug: string;
+  image?: string;
+};
+
+export type Product = {
+  _id: string;
+  title: string;
+  slug: string;
+  description: string;
+  quantity: number;
+  price: number;
+  priceAfterDiscount?: number;
+  imageCover: string;
+  images: string[];
+  sold: number;
+  ratingsAverage: number;
+  ratingsQuantity: number;
+  subcategory: Subcategory[];
+  category: Category;
+  brand: Brand;
+  createdAt: string;
+  updatedAt: string;
+  id: string;
+};
+
+interface ProductCardProps {
+  product: Product;
+  className?: string;
+  onAddToCart?: (product: Product) => void;
+  onAddToWishlist?: (product: Product) => void;
+  isInWishlist?: boolean;
+}
 export interface CartItem {
   count: number;
   _id: string;

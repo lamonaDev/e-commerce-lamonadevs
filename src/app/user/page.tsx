@@ -2,7 +2,7 @@
 import { useContext, useState } from "react";
 import { MainContext } from "@/app/_Context/MainContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import { Trash2, Plus, User, Mail, Phone, MapPin, Home, Lock, RefreshCw } from "lucide-react";
 import { Button } from "@heroui/react";
@@ -11,7 +11,7 @@ import { IoIosArrowRoundBack } from "react-icons/io";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoIosPaper } from "react-icons/io";
-
+import { easeInOut } from "framer-motion";
 interface Address {
   _id: string;
   name: string;
@@ -115,7 +115,7 @@ function UserPageContent() {
       });
       queryClient.invalidateQueries({ queryKey: ["addresses"] });
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{message: string}>) => {
       toast.error(error.response?.data?.message || "Failed to delete address", {
         style: {
           borderRadius: '10px',
@@ -139,7 +139,7 @@ function UserPageContent() {
       scale: 1.05,
       transition: {
         duration: 0.2,
-        ease: "easeInOut"
+        ease: easeInOut
       }
     },
     tap: {
@@ -222,21 +222,24 @@ function UserPageContent() {
         className="space-y-6"
       >
         <motion.div variants={itemVariants}>
-          <Button
-            as={Link}
-            href='/home'
-            variant='flat'
-            color='success'
-            className='mb-6 group'
+          <motion.div
             whileHover="hover"
             whileTap="tap"
             variants={buttonVariants}
           >
-            <div className="flex items-center gap-2">
-              <IoIosArrowRoundBack className="group-hover:-translate-x-1 transition-transform" size={24} />
-              <span>Back to Home</span>
-            </div>
-          </Button>
+            <Button
+              as={Link}
+              href='/home'
+              variant='flat'
+              color='success'
+              className='mb-6 group'
+            >
+              <div className="flex items-center gap-2">
+                <IoIosArrowRoundBack className="group-hover:-translate-x-1 transition-transform" size={24} />
+                <span>Back to Home</span>
+              </div>
+            </Button>
+          </motion.div>
         </motion.div>
         <motion.h1
           variants={itemVariants}
@@ -307,59 +310,55 @@ function UserPageContent() {
                   </div>
                 </div>
                 <div className="w-full space-y-3">
-                  <Button
-                    as={Link}
-                    href="/allorders"
-                    className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-medium py-3"
-                    whileHover="hover"
-                    whileTap="tap"
-                    variants={buttonVariants}
-                  >
-                    <div className="flex items-center justify-center gap-2">
-                      <IoIosPaper size={18} />
-                      <span>My Orders</span>
-                    </div>
-                  </Button>
+                  <motion.div whileHover="hover" whileTap="tap" variants={buttonVariants}>
+                    <Button
+                      as={Link}
+                      href="/allorders"
+                      className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-medium py-3"
+                    >
+                      <div className="flex items-center justify-center gap-2">
+                        <IoIosPaper size={18} />
+                        <span>My Orders</span>
+                      </div>
+                    </Button>
+                  </motion.div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <Button
-                      variant="flat"
-                      color="primary"
-                      className="bg-gray-700 hover:bg-gray-600 text-blue-200 hover:text-white py-3"
-                      whileHover="hover"
-                      whileTap="tap"
-                      variants={buttonVariants}
-                    >
-                      <div className="flex items-center justify-center gap-2">
-                        <Lock size={18} />
-                        <span className="text-sm">Reset Password</span>
-                      </div>
-                    </Button>
-                    <Button
-                      variant="flat"
-                      color="primary"
-                      className="bg-gray-700 hover:bg-gray-600 text-blue-200 hover:text-white py-3"
-                      whileHover="hover"
-                      whileTap="tap"
-                      variants={buttonVariants}
-                    >
-                      <div className="flex items-center justify-center gap-2">
-                        <User size={18} />
-                        <span className="text-sm">Update Profile</span>
-                      </div>
-                    </Button>
-                    <Button
-                      variant="flat"
-                      color="primary"
-                      className="bg-gray-700 hover:bg-gray-600 text-blue-200 hover:text-white py-3 col-span-full"
-                      whileHover="hover"
-                      whileTap="tap"
-                      variants={buttonVariants}
-                    >
-                      <div className="flex items-center justify-center gap-2">
-                        <RefreshCw size={18} />
-                        <span className="text-sm">Update Password</span>
-                      </div>
-                    </Button>
+                    <motion.div whileHover="hover" whileTap="tap" variants={buttonVariants}>
+                      <Button
+                        variant="flat"
+                        color="primary"
+                        className="bg-gray-700 hover:bg-gray-600 text-blue-200 hover:text-white py-3 w-full"
+                      >
+                        <div className="flex items-center justify-center gap-2">
+                          <Lock size={18} />
+                          <span className="text-sm">Reset Password</span>
+                        </div>
+                      </Button>
+                    </motion.div>
+                    <motion.div whileHover="hover" whileTap="tap" variants={buttonVariants}>
+                      <Button
+                        variant="flat"
+                        color="primary"
+                        className="bg-gray-700 hover:bg-gray-600 text-blue-200 hover:text-white py-3 w-full"
+                      >
+                        <div className="flex items-center justify-center gap-2">
+                          <User size={18} />
+                          <span className="text-sm">Update Profile</span>
+                        </div>
+                      </Button>
+                    </motion.div>
+                    <motion.div whileHover="hover" whileTap="tap" variants={buttonVariants} className="col-span-full">
+                      <Button
+                        variant="flat"
+                        color="primary"
+                        className="bg-gray-700 hover:bg-gray-600 text-blue-200 hover:text-white py-3 w-full"
+                      >
+                        <div className="flex items-center justify-center gap-2">
+                          <RefreshCw size={18} />
+                          <span className="text-sm">Update Password</span>
+                        </div>
+                      </Button>
+                    </motion.div>
                   </div>
                 </div>
               </div>
@@ -425,7 +424,7 @@ function UserPageContent() {
                             <h3 className="text-xl font-medium text-white">{address.name}</h3>
                             <motion.button
                               onClick={() => handleDeleteAddress(address._id)}
-                              disabled={deleteAddressMutation.isLoading}
+                              disabled={deleteAddressMutation.isPending}
                               whileHover={{ scale: 1.1 }}
                               whileTap={{ scale: 0.9 }}
                               className="p-1.5 rounded-full bg-red-900/50 hover:bg-red-800 text-red-300 hover:text-white transition-colors"

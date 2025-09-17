@@ -8,6 +8,7 @@ export type ProductsApiResponse = {
     currentPage: number;
     numberOfPages: number;
     limit: number;
+    total: string;
     nextPage?: number;
     results: number
   };

@@ -4,6 +4,7 @@ import { Search, X, Loader2, Package } from "lucide-react";
 import ProductCard, { Product } from "../productCard/productCard";
 import { Button, Input } from "@heroui/react";
 import ProductsApiService from "../../_Services/productsApi";
+import { ProductFromCat } from "@/app/(user)/categories/[...slug]/page";
 
 interface ProductSearchProps {
   placeholder?: string;
@@ -75,11 +76,11 @@ export default function ProductSearch({
       window.location.href = `/products/${product.slug}`;
     }
   };
-  const handleAddToCart = useCallback(async (product: Product) => {
+  const handleAddToCart = useCallback(async (product: ProductFromCat) => {
     console.log('Adding to cart:', product.title);
   }, []);
 
-  const handleAddToWishlist = useCallback(async (product: Product) => {
+  const handleAddToWishlist = useCallback(async (product: ProductFromCat) => {
     console.log('Adding to wishlist:', product.title);
   }, []);
   return (

@@ -20,6 +20,7 @@ import {
 import ProductCard, { Product } from "../../_Components/productCard/productCard";
 import ProductsApiService, { ProductsApiResponse } from "../../_Services/productsApi";
 import toast from "react-hot-toast";
+import { ProductFromCat } from "../categories/[...slug]/page";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -38,7 +39,7 @@ const itemVariants = {
     y: 0,
     opacity: 1,
     transition: {
-      type: "spring",
+      type: "spring" as const,
       stiffness: 100,
       damping: 12
     }
@@ -95,7 +96,7 @@ export default function Home() {
     fetchProducts(currentPage);
   }, [currentPage]);
 
-  const handleAddToCart = async (product: Product) => {
+  const handleAddToCart = async (product: ProductFromCat) => {
     toast.success(`${product.title} added to cart`, {
       icon: <ShoppingCart className="w-5 h-5 text-emerald-500" />,
       style: {
@@ -106,7 +107,7 @@ export default function Home() {
     });
   };
 
-  const handleAddToWishlist = async (product: Product) => {
+  const handleAddToWishlist = async (product: ProductFromCat) => {
     toast.success(`${product.title} added to wishlist`, {
       icon: <Heart className="w-5 h-5 text-red-500" />,
       style: {
@@ -169,26 +170,26 @@ export default function Home() {
               transition={{ delay: 0.6 }}
               className="flex flex-col sm:flex-row justify-center gap-4"
             >
-              <Button
-                as={Link}
-                href="/products"
-                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-lg"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Shop Now
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  as={Link}
+                  href="/products"
+                  className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg"
+                >
+                  Shop Now
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
+              </motion.div>
 
-              <Button
-                variant="bordered"
-                className="px-8 py-4 border-2 border-gray-300 dark:border-gray-600 text-gray-800 dark:text-white font-medium rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all transform hover:scale-105"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Search className="mr-2 w-5 h-5" />
-                Explore Categories
-              </Button>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  variant="bordered"
+                  className="px-8 py-4 border-2 border-gray-300 dark:border-gray-600 text-gray-800 dark:text-white font-medium rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
+                >
+                  <Search className="mr-2 w-5 h-5" />
+                  Explore Categories
+                </Button>
+              </motion.div>
             </motion.div>
           </motion.div>
         </div>
@@ -234,25 +235,25 @@ export default function Home() {
             className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4"
           >
             <div className="flex items-center gap-3">
-              <Button
-                variant="light"
-                className="flex items-center gap-2 bg-white dark:bg-gray-800"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <LayoutGrid className="w-5 h-5" />
-                <span>All Categories</span>
-              </Button>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  variant="light"
+                  className="flex items-center gap-2 bg-white dark:bg-gray-800"
+                >
+                  <LayoutGrid className="w-5 h-5" />
+                  <span>All Categories</span>
+                </Button>
+              </motion.div>
 
-              <Button
-                variant="light"
-                className="flex items-center gap-2 bg-white dark:bg-gray-800"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Filter className="w-5 h-5" />
-                <span>Filters</span>
-              </Button>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  variant="light"
+                  className="flex items-center gap-2 bg-white dark:bg-gray-800"
+                >
+                  <Filter className="w-5 h-5" />
+                  <span>Filters</span>
+                </Button>
+              </motion.div>
             </div>
 
             <div className="text-sm text-gray-600 dark:text-gray-400">
@@ -300,14 +301,14 @@ export default function Home() {
                   <ShoppingBag className="w-16 h-16 text-red-500 mx-auto" />
                 </motion.div>
                 <p className="text-red-600 dark:text-red-400 mb-6 text-lg">{error}</p>
-                <Button
-                  variant="bordered"
-                  onClick={() => fetchProducts(currentPage)}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Try Again
-                </Button>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button
+                    variant="bordered"
+                    onClick={() => fetchProducts(currentPage)}
+                  >
+                    Try Again
+                  </Button>
+                </motion.div>
               </motion.div>
             ) : products.length > 0 ? (
               <>
@@ -341,50 +342,49 @@ export default function Home() {
                   transition={{ delay: 0.4 }}
                   className="flex flex-col sm:flex-row justify-between items-center mt-12 gap-4"
                 >
-                  <Button
-                    variant="bordered"
-                    size="sm"
-                    isDisabled={currentPage <= 1}
-                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                    className="flex items-center gap-1"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <ChevronLeft className="w-4 h-4" />
-                    Previous
-                  </Button>
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Button
+                      variant="bordered"
+                      size="sm"
+                      isDisabled={currentPage <= 1}
+                      onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                      className="flex items-center gap-1"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                      Previous
+                    </Button>
+                  </motion.div>
 
                   <div className="flex items-center gap-1">
                     {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
                       const pageNumber = i + 1;
                       return (
-                        <Button
-                          key={pageNumber}
-                          variant={currentPage === pageNumber ? "flat" : "bordered"}
-                          size="sm"
-                          onClick={() => setCurrentPage(pageNumber)}
-                          className={`w-10 h-10 ${currentPage === pageNumber ? 'bg-blue-600 text-white' : ''}`}
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                        >
-                          {pageNumber}
-                        </Button>
+                        <motion.div key={pageNumber} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                          <Button
+                            variant={currentPage === pageNumber ? "flat" : "bordered"}
+                            size="sm"
+                            onClick={() => setCurrentPage(pageNumber)}
+                            className={`w-10 h-10 ${currentPage === pageNumber ? 'bg-blue-600 text-white' : ''}`}
+                          >
+                            {pageNumber}
+                          </Button>
+                        </motion.div>
                       );
                     })}
                   </div>
 
-                  <Button
-                    variant="bordered"
-                    size="sm"
-                    isDisabled={currentPage >= totalPages}
-                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                    className="flex items-center gap-1"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    Next
-                    <ChevronRight className="w-4 h-4" />
-                  </Button>
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Button
+                      variant="bordered"
+                      size="sm"
+                      isDisabled={currentPage >= totalPages}
+                      onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                      className="flex items-center gap-1"
+                    >
+                      Next
+                      <ChevronRight className="w-4 h-4" />
+                    </Button>
+                  </motion.div>
                 </motion.div>
               </>
             ) : (
@@ -403,15 +403,15 @@ export default function Home() {
                   <ShoppingBag className="w-16 h-16 text-gray-400 mx-auto" />
                 </motion.div>
                 <p className="text-gray-600 dark:text-gray-400 mb-6 text-lg">No products available at the moment.</p>
-                <Button
-                  as={Link}
-                  href="/brands"
-                  variant="bordered"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Explore Brands Instead
-                </Button>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button
+                    as={Link}
+                    href="/brands"
+                    variant="bordered"
+                  >
+                    Explore Brands Instead
+                  </Button>
+                </motion.div>
               </motion.div>
             )}
           </AnimatePresence>
@@ -431,10 +431,7 @@ export default function Home() {
             <p className="text-lg mb-8 max-w-2xl mx-auto">
               Join thousands of satisfied customers who trust us for quality products and exceptional service.
             </p>
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button
                 as={Link}
                 href="/products"

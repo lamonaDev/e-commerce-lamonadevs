@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { AxiosError } from "axios";
+import { ProductFromCat } from "@/app/(user)/categories/[...slug]/page";
 
 export type Subcategory = {
   _id: string;
@@ -53,16 +54,18 @@ export type Product = {
 };
 
 interface ProductCardProps {
-  product: Product;
+  product: ProductFromCat;
+  productId?: string;
   className?: string;
-  onAddToCart?: (product: Product) => void;
-  onAddToWishlist?: (product: Product) => void;
+  onAddToCart?: (product: ProductFromCat) => void;
+  onAddToWishlist?: (product: ProductFromCat) => void;
   isInWishlist?: boolean;
 }
 
 export default function ProductCard({
   product,
   className = "",
+  productId,
   onAddToCart,
   onAddToWishlist,
   isInWishlist = false,
@@ -97,7 +100,7 @@ export default function ProductCard({
       return response.data;
     },
     onSuccess: (data) => {
-      // toast.success("Product added to cart successfully");
+      toast.success("Product added to cart successfully");
       const currentCount = queryClient.getQueryData<number>(["cartItemCount", userToken]) || 0;
       queryClient.setQueryData(["cartItemCount", userToken], currentCount + 1);
       setNumberOfCart(currentCount + 1);

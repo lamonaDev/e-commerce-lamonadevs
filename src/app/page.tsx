@@ -22,6 +22,7 @@ import ProductSearch from "./_Components/productSearch/ProductSearch";
 import ProductCard, { Product } from "./_Components/productCard/productCard";
 import ProductsApiService from "./_Services/productsApi";
 import toast from "react-hot-toast";
+import { ProductFromCat } from "./(user)/categories/[...slug]/page";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -40,7 +41,7 @@ const itemVariants = {
     y: 0,
     opacity: 1,
     transition: {
-      type: "spring",
+      type: "spring" as const,
       stiffness: 100,
       damping: 12
     }
@@ -97,7 +98,7 @@ export default function Home() {
     fetchFeaturedProducts();
   }, []);
 
-  const handleAddToCart = async (product: Product) => {
+  const handleAddToCart = async (product: ProductFromCat) => {
     toast.success(`${product.title} added to cart`, {
       icon: <ShoppingCart className="w-5 h-5 text-emerald-500" />,
       style: {
@@ -108,7 +109,7 @@ export default function Home() {
     });
   };
 
-  const handleAddToWishlist = async (product: Product) => {
+  const handleAddToWishlist = async (product: ProductFromCat) => {
     toast.success(`${product.title} added to wishlist`, {
       icon: <Heart className="w-5 h-5 text-red-500" />,
       style: {
@@ -306,9 +307,6 @@ export default function Home() {
                 <p className="text-red-600 dark:text-red-400 mb-6 text-lg">{error}</p>
                 <Button
                   variant="bordered"
-                  onClick={() => fetchFeaturedProducts()}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
                 >
                   Try Again
                 </Button>

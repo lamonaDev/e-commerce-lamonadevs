@@ -9,7 +9,7 @@ import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { FiArrowLeft } from "react-icons/fi";
-
+import {Brand, Product} from "../../../../../types/all"
 type Subcategory = {
   _id: string;
   name: string;
@@ -22,20 +22,29 @@ type Category = {
   slug: string;
 };
 
-type Product = {
-  id: string;
-  title: string;
-  price: number;
+export type ProductFromCat = {
   _id: string;
+  title: string;
+  slug: string;
+  description: string;
+  quantity: number;
+  price: number;
+  priceAfterDiscount?: number;
+  imageCover: string;
   images: string[];
-  ratingsAverage?: number;
-  category: Category;
+  sold: number;
+  ratingsAverage: number;
+  ratingsQuantity: number;
   subcategory: Subcategory[];
-  description?: string;
+  category: Category;
+  brand: Brand;
+  createdAt: string;
+  updatedAt: string;
+  id: string;
 };
 
 type ProductsResponse = {
-  data: Product[];
+  data: ProductFromCat[];
   metadata: {
     numberOfPages: number;
   };
@@ -67,16 +76,16 @@ function HomeContent() {
   };
 
   const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 100
-      }
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: "spring" as const,
+      stiffness: 100
     }
-  };
+  }
+};
 
   if (isLoading) {
     return (
@@ -184,7 +193,7 @@ function HomeContent() {
           animate="visible"
           className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8"
         >
-          {allProducts.data.map((product) => (
+          {allProducts.data.map((product: ProductFromCat) => (
             <motion.div
               key={product._id}
               variants={itemVariants}

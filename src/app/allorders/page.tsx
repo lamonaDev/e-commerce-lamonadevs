@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { motion, AnimatePresence } from 'framer-motion';
 import { Package, Truck, CreditCard, Home, MapPin, ShoppingBag, DollarSign, CheckCircle, Clock, ChevronDown, ChevronUp, Phone } from 'lucide-react';
-
+import { easeOut } from 'framer-motion';
 type DecodedToken = {
   id: string;
   name: string;
@@ -108,7 +108,7 @@ const itemVariants = {
     y: 0,
     opacity: 1,
     transition: {
-      type: "spring",
+      type: "spring" as const,
       stiffness: 100,
       damping: 12
     }
@@ -137,7 +137,7 @@ const loadingItemVariants = {
     y: 0,
     transition: {
       duration: 0.5,
-      ease: "easeOut"
+      ease: easeOut
     }
   }
 };
@@ -363,17 +363,17 @@ export default function AllOrdersPage() {
           animate={{ opacity: 1 }}
           className="mb-8"
         >
-          <Button
-            as={Link}
-            href='/home'
-            variant='flat'
-            color='success'
-            className='mb-4 md:mb-6'
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <IoIosArrowRoundBack size={30}/>
-          </Button>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              as={Link}
+              href='/home'
+              variant='flat'
+              color='success'
+              className='mb-4 md:mb-6'
+            >
+              <IoIosArrowRoundBack size={30}/>
+            </Button>
+          </motion.div>
 
           <motion.h1
             initial={{ y: 20, opacity: 0 }}
