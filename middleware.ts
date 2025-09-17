@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
-const protectedRoutes = ['/home'];
+const protectedRoutes = ['/home', '/brands', '/cart', '/categories', '/allorders', '/wishlist', '/user'];
 const publicRoutes = ['/login', '/signup', '/'];
 
 export default async function middleware(req: NextRequest) {
@@ -9,7 +9,7 @@ export default async function middleware(req: NextRequest) {
   const isProtectedRoute = protectedRoutes.includes(path);
   const isPublicRoute = publicRoutes.includes(path);
   const cookieStore = await cookies();
-  const token = cookieStore.get('token')?.value || null; // Removed window.localStorage
+  const token = window.localStorage.getItem("token") || null;
   if (isProtectedRoute && !token) {
     return NextResponse.redirect(new URL('/login', req.nextUrl));
   }
