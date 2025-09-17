@@ -107,7 +107,8 @@ function LoginForm() {
           background: '#333',
           color: '#fff',
         }
-      });
+      }
+      );
       const token = data?.token;
       if (token) {
         window.localStorage.setItem("token", token);
