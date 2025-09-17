@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import React, { useState, useEffect } from "react";
 
 export type Brand = {
@@ -10,6 +11,7 @@ export type Brand = {
   createdAt: string;
   updatedAt: string;
 };
+
 export type BrandsApiResponse = {
   results: number;
   metadata: {
@@ -17,9 +19,11 @@ export type BrandsApiResponse = {
     numberOfPages: number;
     limit: number;
     nextPage?: number;
+    results: number
   };
   data: Brand[];
 };
+
 interface BrandCardProps {
   brand: Brand;
   className?: string;
@@ -29,11 +33,12 @@ export default function BrandCard({ brand, className = "" }: BrandCardProps) {
   const [imageError, setImageError] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
   const [retryCount, setRetryCount] = useState(0);
-  const USE_FALLBACK_ONLY = true; // Temporarily forcing fallback due to CORS issues
+  const USE_FALLBACK_ONLY = true;
+
   const getBrandColor = (name: string) => {
     const colors = [
       'from-blue-500 to-purple-600',
-      'from-green-500 to-teal-600', 
+      'from-green-500 to-teal-600',
       'from-red-500 to-pink-600',
       'from-yellow-500 to-orange-600',
       'from-indigo-500 to-blue-600',
@@ -46,6 +51,7 @@ export default function BrandCard({ brand, className = "" }: BrandCardProps) {
     const colorIndex = name.charCodeAt(0) % colors.length;
     return colors[colorIndex];
   };
+
   const getImageUrl = () => {
     if (USE_FALLBACK_ONLY) return null;
     if (retryCount === 0) {
@@ -59,6 +65,7 @@ export default function BrandCard({ brand, className = "" }: BrandCardProps) {
     }
     return null;
   };
+
   const handleImageError = () => {
     if (retryCount < 2) {
       setRetryCount(prev => prev + 1);
@@ -68,17 +75,20 @@ export default function BrandCard({ brand, className = "" }: BrandCardProps) {
       setImageLoading(false);
     }
   };
+
   const handleImageLoad = () => {
     setImageLoading(false);
   };
+
   useEffect(() => {
     setImageError(false);
     setImageLoading(true);
     setRetryCount(0);
   }, [brand._id]);
+
   return (
-    <Link 
-      href={`/brands/${brand.slug}`} 
+    <Link
+      href={`/brands/${brand.slug}`}
       className={`group ${className} focus:outline-none`}
       aria-label={`View ${brand.name} products`}
     >
@@ -92,15 +102,20 @@ export default function BrandCard({ brand, className = "" }: BrandCardProps) {
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
                   </div>
                 )}
-                <img
-                  src={getImageUrl()}
-                  alt={`${brand.name} logo`}
-                  className={`w-full h-full object-contain group-hover:scale-105 transition-all duration-300 ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
-                  onError={handleImageError}
-                  onLoad={handleImageLoad}
-                  loading="lazy"
-                  crossOrigin="anonymous"
-                />
+                <div className="relative w-full h-full">
+                  <Image
+                    src={getImageUrl() || ''}
+                    alt={`${brand.name} logo`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className={`object-contain group-hover:scale-105 transition-all duration-300 ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
+                    onError={handleImageError}
+                    onLoad={handleImageLoad}
+                    loading="lazy"
+                    unoptimized={true}
+                    priority={false}
+                  />
+                </div>
               </>
             ) : (
               <div className={`w-full h-full flex items-center justify-center bg-gradient-to-br ${getBrandColor(brand.name)} rounded-lg relative overflow-hidden`}>

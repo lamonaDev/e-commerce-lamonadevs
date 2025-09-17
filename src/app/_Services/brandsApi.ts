@@ -80,8 +80,6 @@ export class BrandsApiService {
   ): Promise<BrandsApiResponse> {
     try {
       const response = await this.getBrands(page, limit);
-      
-      // Filter brands by search term
       const filteredBrands = response.data.filter(brand =>
         brand.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         brand.slug.toLowerCase().includes(searchTerm.toLowerCase())

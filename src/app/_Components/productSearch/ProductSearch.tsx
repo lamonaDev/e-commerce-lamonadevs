@@ -166,7 +166,7 @@ export default function ProductSearch({
                   No products found
                 </h4>
                 <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 mb-4">
-                  We couldn't find any products matching "{debouncedSearchTerm}".
+                  We could not find any products matching  {debouncedSearchTerm} .
                   Try different keywords or browse our categories.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-2 justify-center">

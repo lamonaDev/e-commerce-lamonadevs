@@ -59,7 +59,7 @@ function MainUserContextContent({ children }: { children: React.ReactNode }) {
     }
   }
 
-  const { data: cartCount } = useQuery({
+  const { data: cartCount, isError } = useQuery({
     queryKey: ["cartItemCount", userToken],
     queryFn: async () => {
       if (!userToken) return 0;
@@ -70,13 +70,15 @@ function MainUserContextContent({ children }: { children: React.ReactNode }) {
     },
     enabled: !!userToken,
     retry: 1,
-    onSuccess: (count) => {
-      setNumberOfCart(count);
-    },
-    onError: () => {
-      setNumberOfCart(0);
-    },
   });
+
+  useEffect(() => {
+    if (isError) {
+      setNumberOfCart(0);
+    } else if (typeof cartCount === "number") {
+      setNumberOfCart(cartCount);
+    }
+  }, [cartCount, isError]);
 
   const invalidateCart = async () => {
     await queryClient.invalidateQueries({ queryKey: ["cartItemCount", userToken] });

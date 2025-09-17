@@ -10,7 +10,7 @@ import {
   Input,
 } from "@heroui/react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { z } from "zod";
+import { string, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext } from "react";
 import { MainContext } from "@/app/_Context/MainContext";
@@ -76,7 +76,7 @@ export default function AddressModal() {
             ? (error.response.data as { message?: string }).message || "Failed to add address"
             : error.response.data
           : "Failed to add address";
-      toast.error(message);
+      toast.error("faild to add address");
     },
   });
 

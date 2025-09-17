@@ -9,6 +9,7 @@ export type ProductsApiResponse = {
     numberOfPages: number;
     limit: number;
     nextPage?: number;
+    results: number
   };
   data: Product[];
 };

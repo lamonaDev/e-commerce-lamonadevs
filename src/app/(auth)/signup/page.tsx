@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation, QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import axios from "axios";
+import axios, {AxiosError} from "axios";
 import { SignUp } from "../../../../interfaces/AUTH";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -67,7 +67,7 @@ const itemVariants = {
     y: 0,
     opacity: 1,
     transition: {
-      type: "spring",
+      type: "spring" as const,
       stiffness: 100
     }
   }
@@ -114,7 +114,7 @@ function SignUpForm() {
       router.push("/login");
       reset();
     },
-    onError: (error) => {
+    onError: (error: AxiosError<{message: string}>) => {
       toast.error(error.response?.data?.message || "Signup failed. Please try again.", {
         icon: <AlertCircle className="w-5 h-5 text-red-500" />,
         style: {
@@ -125,16 +125,13 @@ function SignUpForm() {
       });
     },
   });
-
   const onSubmit = (values: SignUpForm) => {
     mutation.mutate(values);
   };
-
   return (
     <section className="min-h-screen w-full flex items-center justify-center p-4 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800">
       <div className="absolute -top-10 -left-10 w-40 h-40 bg-purple-200 dark:bg-purple-900 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
       <div className="absolute -bottom-10 -right-10 w-60 h-60 bg-blue-200 dark:bg-blue-900 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -163,7 +160,6 @@ function SignUpForm() {
                 Join thousands of happy customers
               </p>
             </motion.div>
-
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               <motion.div variants={itemVariants}>
                 <Input
@@ -177,7 +173,6 @@ function SignUpForm() {
                   startContent={<User className="w-4 h-4 text-gray-500" />}
                 />
               </motion.div>
-
               <motion.div variants={itemVariants}>
                 <Input
                   {...register("email")}

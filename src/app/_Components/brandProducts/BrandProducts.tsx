@@ -61,13 +61,11 @@ export default function BrandProducts({ brand, className = "" }: BrandProductsPr
   };
 
   const handleAddToCart = async (product: Product) => {
-    console.log('Adding to cart:', product.title);
-    // TODO: Implement actual cart functionality
+    // console.log('Adding to cart:', product.title);
   };
 
   const handleAddToWishlist = async (product: Product) => {
-    console.log('Adding to wishlist:', product.title);
-    // TODO: Implement actual wishlist functionality
+    // console.log('Adding to wishlist:', product.title);
   };
 
   if (isLoading) {

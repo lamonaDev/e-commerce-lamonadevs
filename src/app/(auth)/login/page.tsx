@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation, QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import axios from "axios";
+import axios, {AxiosError} from "axios";
 import { Login } from "../../../../interfaces/AUTH";
 import { useState, useContext, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -59,7 +59,7 @@ const itemVariants = {
     y: 0,
     opacity: 1,
     transition: {
-      type: "spring",
+      type: "spring" as const,
       stiffness: 100
     }
   }
@@ -116,7 +116,7 @@ function LoginForm() {
         reset();
       }
     },
-    onError: (error) => {
+    onError: (error: AxiosError<{message: string}>) => {
       toast.error(error.response?.data?.message || "Login failed. Please try again.", {
         icon: <AlertCircle className="w-5 h-5 text-red-500" />,
         style: {
@@ -136,10 +136,8 @@ function LoginForm() {
 
   return (
     <section className="min-h-screen w-full flex items-center justify-center p-4 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800">
-      {/* Decorative elements */}
       <div className="absolute -top-10 -left-10 w-40 h-40 bg-purple-200 dark:bg-purple-900 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
       <div className="absolute -bottom-10 -right-10 w-60 h-60 bg-blue-200 dark:bg-blue-900 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -168,7 +166,6 @@ function LoginForm() {
                 Sign in to your account to continue
               </p>
             </motion.div>
-
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               <motion.div variants={itemVariants}>
                 <Input
@@ -183,7 +180,6 @@ function LoginForm() {
                   startContent={<Mail className="w-4 h-4 text-gray-500" />}
                 />
               </motion.div>
-
               <motion.div variants={itemVariants}>
                 <Input
                   {...register("password")}
@@ -197,7 +193,6 @@ function LoginForm() {
                   startContent={<Lock className="w-4 h-4 text-gray-500" />}
                 />
               </motion.div>
-
               <div className="flex justify-between items-center">
                 <Link
                   href="/forgot-password"
@@ -206,7 +201,6 @@ function LoginForm() {
                   Forgot password?
                 </Link>
               </div>
-
               <AnimatePresence>
                 {mutation.isError && (
                   <motion.p
@@ -220,7 +214,6 @@ function LoginForm() {
                   </motion.p>
                 )}
               </AnimatePresence>
-
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -255,7 +248,6 @@ function LoginForm() {
                   )}
                 </Button>
               </motion.div>
-
               <div className="relative my-6">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
@@ -266,7 +258,6 @@ function LoginForm() {
                   </span>
                 </div>
               </div>
-
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -280,7 +271,6 @@ function LoginForm() {
                   Guest Checkout
                 </Button>
               </motion.div>
-
               <div className="text-center mt-4">
                 <p className="text-sm text-gray-500 dark:text-gray-400">
                   Do not have an account?{" "}
@@ -294,7 +284,6 @@ function LoginForm() {
               </div>
             </form>
           </div>
-
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -308,7 +297,6 @@ function LoginForm() {
     </section>
   );
 }
-
 export default function LoginPage() {
   return (
     <QueryClientProvider client={queryClient}>

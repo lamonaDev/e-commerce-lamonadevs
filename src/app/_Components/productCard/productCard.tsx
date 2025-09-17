@@ -8,6 +8,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
+import { AxiosError } from "axios";
 
 export type Subcategory = {
   _id: string;
@@ -96,14 +97,14 @@ export default function ProductCard({
       return response.data;
     },
     onSuccess: (data) => {
-      toast.success("Product added to cart successfully");
+      // toast.success("Product added to cart successfully");
       const currentCount = queryClient.getQueryData<number>(["cartItemCount", userToken]) || 0;
       queryClient.setQueryData(["cartItemCount", userToken], currentCount + 1);
       setNumberOfCart(currentCount + 1);
       invalidateCart();
       onAddToCart?.(product);
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message: string }>) => {
       toast.error(error.response?.data?.message || "Failed to add product to cart");
     },
     onSettled: () => {
@@ -137,7 +138,7 @@ export default function ProductCard({
           headers: { token: userToken },
         });
         setIsWishlisted(false);
-        toast.success("Product removed from wishlist");
+        // toast.success("Product removed from wishlist");
       } else {
         await axios.post(
           "https://ecommerce.routemisr.com/api/v1/wishlist",
@@ -145,12 +146,13 @@ export default function ProductCard({
           { headers: { token: userToken } }
         );
         setIsWishlisted(true);
-        toast.success("Product added to wishlist successfully");
+        // toast.success("Product added to wishlist successfully");
       }
       onAddToWishlist?.(product);
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || `Failed to ${isWishlisted ? "remove from" : "add to"} wishlist`);
-      setIsWishlisted(isWishlisted);
+    } catch (error: unknown) {
+        const axiosError = error as AxiosError<{ message: string }>;
+        toast.error(axiosError.response?.data?.message || `Failed to ${isWishlisted ? "remove from" : "add to"} wishlist`);
+        setIsWishlisted(isWishlisted);
     } finally {
       setIsUpdatingWishlist(false);
     }
