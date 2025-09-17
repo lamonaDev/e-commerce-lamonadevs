@@ -3,7 +3,6 @@ import { ProtectedRoute } from "@/_routes/route.route";
 import { Suspense, useContext } from "react";
 import { MainContext } from "@/app/_Context/MainContext";
 import ProductCard from "@/app/_Components/productCard/productCard";
-import Carousel from "@/app/_Components/carosel/carosel";
 import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
