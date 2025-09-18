@@ -81,48 +81,43 @@ function UserPageContent() {
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://ecommerce.routemisr.com/api/v1";
 
   // Fetch addresses
-  const { data: addressesData, isLoading: isLoadingAddresses, error: addressesError } = useQuery<AddressesResponse>({
+  const { data: addressesData, isLoading: isLoadingAddresses, error: addressesError } = useQuery({
     queryKey: ["addresses", userToken],
-    queryFn: async () => {
+    queryFn: async (): Promise<AddressesResponse> => {
       if (!userToken) throw new Error("User not authenticated");
       const response = await axios.get(`${API_BASE_URL}/addresses`, {
         headers: { token: userToken },
-        withCredentials: true
       });
       return response.data;
     },
     enabled: !!userToken && isMounted,
     retry: 2,
-    staleTime: 5 * 60 * 1000,
   });
 
   // Verify token and get user data
-  const { data: tokenData, isLoading: isLoadingToken } = useQuery<UserTokenResponse>({
+  const { data: tokenData, isLoading: isLoadingToken } = useQuery({
     queryKey: ["userTokenData", userToken],
-    queryFn: async () => {
+    queryFn: async (): Promise<UserTokenResponse> => {
       if (!userToken) throw new Error("User not authenticated");
       const response = await axios.get(`${API_BASE_URL}/auth/verifyToken`, {
         headers: { token: userToken },
-        withCredentials: true
       });
       return response.data;
     },
     enabled: !!userToken && isMounted,
     retry: 2,
-    staleTime: 5 * 60 * 1000,
   });
 
   // Get full user data
-  const { data: userDataResponse, isLoading: isLoadingUserData } = useQuery<UserDataResponse>({
+  const { data: userDataResponse, isLoading: isLoadingUserData } = useQuery({
     queryKey: ["userData", tokenData?.decoded?.id],
-    queryFn: async () => {
+    queryFn: async (): Promise<UserDataResponse> => {
       if (!tokenData?.decoded?.id) throw new Error("User ID not found");
       const response = await axios.get(`${API_BASE_URL}/users/${tokenData.decoded.id}`);
       return response.data;
     },
     enabled: !!tokenData?.decoded?.id && isMounted,
     retry: 2,
-    staleTime: 5 * 60 * 1000,
   });
 
   // Delete address mutation
@@ -131,7 +126,6 @@ function UserPageContent() {
       if (!userToken) throw new Error("User not authenticated");
       const response = await axios.delete(`${API_BASE_URL}/addresses/${addressId}`, {
         headers: { token: userToken },
-        withCredentials: true
       });
       return response.data;
     },
@@ -504,9 +498,5 @@ function UserPageContent() {
 }
 
 export default function UserPage() {
-  return (
-    <>
-      <UserPageContent />
-    </>
-  );
+  return <UserPageContent />;
 }
