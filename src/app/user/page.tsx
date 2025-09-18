@@ -11,8 +11,6 @@ import { IoIosArrowRoundBack, IoIosPaper } from "react-icons/io";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-
-// Types
 interface Address {
   _id: string;
   name: string;
@@ -54,8 +52,6 @@ interface UserDataResponse {
     __v: number;
   };
 }
-
-// Skeleton components
 const ProfileSkeleton = () => (
   <div className="lg:w-1/3 w-full space-y-6">
     <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700">
@@ -79,7 +75,6 @@ const ProfileSkeleton = () => (
     </div>
   </div>
 );
-
 const AddressSkeleton = () => (
   <div className="lg:w-2/3 w-full space-y-6">
     <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700">
@@ -102,30 +97,21 @@ const AddressSkeleton = () => (
     </div>
   </div>
 );
-
 function UserPageContent() {
   const router = useRouter();
   const { userToken, userData } = useContext(MainContext) || { userToken: null, userData: null };
   const [imageError, setImageError] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const queryClient = useQueryClient();
-
-  // Ensure component is mounted before rendering
   useEffect(() => {
     setIsMounted(true);
   }, []);
-
-  // Redirect if not authenticated
   useEffect(() => {
     if (!userToken && isMounted) {
       router.push('/login');
     }
   }, [userToken, isMounted, router]);
-
-  // API Configuration
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://ecommerce.routemisr.com/api/v1";
-
-  // Fetch addresses
   const { data: addressesData, isLoading: isLoadingAddresses, error: addressesError } = useQuery({
     queryKey: ["addresses", userToken],
     queryFn: async (): Promise<AddressesResponse> => {
@@ -138,8 +124,6 @@ function UserPageContent() {
     enabled: !!userToken && isMounted,
     retry: 2,
   });
-
-  // Verify token and get user data
   const { data: tokenData, isLoading: isLoadingToken } = useQuery({
     queryKey: ["userTokenData", userToken],
     queryFn: async (): Promise<UserTokenResponse> => {
@@ -152,8 +136,6 @@ function UserPageContent() {
     enabled: !!userToken && isMounted,
     retry: 2,
   });
-
-  // Get full user data
   const { data: userDataResponse, isLoading: isLoadingUserData } = useQuery({
     queryKey: ["userData", tokenData?.decoded?.id],
     queryFn: async (): Promise<UserDataResponse> => {
@@ -164,8 +146,6 @@ function UserPageContent() {
     enabled: !!tokenData?.decoded?.id && isMounted,
     retry: 2,
   });
-
-  // Delete address mutation
   const deleteAddressMutation = useMutation({
     mutationFn: async (addressId: string) => {
       if (!userToken) throw new Error("User not authenticated");
@@ -186,21 +166,14 @@ function UserPageContent() {
       });
     },
   });
-
   const handleDeleteAddress = (addressId: string) => {
     if (window.confirm("Are you sure you want to delete this address?")) {
       deleteAddressMutation.mutate(addressId);
     }
   };
-
   const handleImageError = () => setImageError(true);
-
-  // Loading states
   const isLoading = isLoadingAddresses || isLoadingToken || isLoadingUserData;
-
-  // Error states
   const hasError = addressesError || !addressesData || !userDataResponse;
-
   if (!isMounted) {
     return (
       <div className="container mx-auto px-4 py-8 min-h-screen">
@@ -210,7 +183,6 @@ function UserPageContent() {
       </div>
     );
   }
-
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8 min-h-screen">
@@ -227,14 +199,12 @@ function UserPageContent() {
               <span>Back to Home</span>
             </div>
           </Button>
-
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
             My Profile
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-2xl">
             Manage your personal information and addresses
           </p>
-
           <div className="flex flex-col lg:flex-row gap-8">
             <ProfileSkeleton />
             <AddressSkeleton />
@@ -243,7 +213,6 @@ function UserPageContent() {
       </div>
     );
   }
-
   if (hasError) {
     return (
       <div className="container mx-auto px-4 py-8 min-h-screen">
@@ -279,11 +248,9 @@ function UserPageContent() {
       </div>
     );
   }
-
   return (
     <div className="container mx-auto px-4 py-8 min-h-screen">
       <div className="space-y-6">
-        {/* Back Button */}
         <Button
           as={Link}
           href='/home'
@@ -296,23 +263,17 @@ function UserPageContent() {
             <span>Back to Home</span>
           </div>
         </Button>
-
-        {/* Page Header */}
         <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
           My Profile
         </h1>
         <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-2xl">
           Manage your personal information and addresses
         </p>
-
-        {/* Main Content */}
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Profile Section */}
           <div className="lg:w-1/3 w-full space-y-6">
             <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-xl p-6 border border-gray-700/50 overflow-hidden relative">
               <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/10 to-blue-900/10 -z-10" />
               <div className="flex flex-col items-center text-center">
-                {/* Profile Image */}
                 <div className="mb-4">
                   {!imageError ? (
                     <Image
@@ -332,24 +293,18 @@ function UserPageContent() {
                     </div>
                   )}
                 </div>
-
-                {/* User Info */}
                 <h2 className="text-2xl font-bold text-white mb-1">
                   {userDataResponse?.data?.name || "User"}
                 </h2>
-
                 <div className="flex items-center gap-2 text-emerald-300 mb-3">
                   <span className={`h-2 w-2 rounded-full ${userDataResponse?.data?.active ? 'bg-green-500' : 'bg-red-500'}`}></span>
                   <span className="text-sm">{userDataResponse?.data?.active ? "Active" : "Inactive"}</span>
                 </div>
-
                 <div className="flex items-center gap-2 text-gray-300 mb-4">
                   <span className="bg-gray-700 px-2 py-1 rounded-full text-xs">
                     {userDataResponse?.data?.role || "user"}
                   </span>
                 </div>
-
-                {/* Contact Info */}
                 <div className="w-full space-y-3 mb-6">
                   <div className="flex items-center gap-3 text-gray-300">
                     <Mail className="h-5 w-5 text-emerald-400" />
@@ -360,8 +315,6 @@ function UserPageContent() {
                     <span>{userDataResponse?.data?.phone || "+123 456 7890"}</span>
                   </div>
                 </div>
-
-                {/* Action Buttons */}
                 <div className="w-full space-y-3">
                   <Button
                     as={Link}
@@ -373,7 +326,6 @@ function UserPageContent() {
                       <span>My Orders</span>
                     </div>
                   </Button>
-
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <Button
                       variant="flat"
@@ -385,7 +337,6 @@ function UserPageContent() {
                         <span className="text-sm">Reset Password</span>
                       </div>
                     </Button>
-
                     <Button
                       variant="flat"
                       color="primary"
@@ -396,7 +347,6 @@ function UserPageContent() {
                         <span className="text-sm">Update Profile</span>
                       </div>
                     </Button>
-
                     <Button
                       variant="flat"
                       color="primary"
@@ -412,8 +362,6 @@ function UserPageContent() {
               </div>
             </div>
           </div>
-
-          {/* Addresses Section */}
           <div className="lg:w-2/3 w-full space-y-6">
             <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-xl p-6 border border-gray-700/50">
               <div className="flex justify-between items-center mb-6">
@@ -422,7 +370,6 @@ function UserPageContent() {
                 </h2>
                 <AdressModal />
               </div>
-
               {addressesData?.data?.length === 0 ? (
                 <div className="text-center py-12">
                   <div className="mb-4">
