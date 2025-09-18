@@ -7,11 +7,8 @@ import toast from "react-hot-toast";
 import { Trash2, Plus, User, Mail, Phone, MapPin, Home, Lock, RefreshCw } from "lucide-react";
 import { Button } from "@heroui/react";
 import AdressModal from "../_Components/adressModal/AddressModal";
-import { IoIosArrowRoundBack } from "react-icons/io";
+import { IoIosArrowRoundBack, IoIosPaper } from "react-icons/io";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
-import { IoIosPaper } from "react-icons/io";
-import { easeInOut } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -57,6 +54,54 @@ interface UserDataResponse {
     __v: number;
   };
 }
+
+// Skeleton components
+const ProfileSkeleton = () => (
+  <div className="lg:w-1/3 w-full space-y-6">
+    <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700">
+      <div className="flex flex-col items-center text-center">
+        <div className="w-32 h-32 rounded-full bg-gray-700 mb-4 animate-pulse"></div>
+        <div className="h-6 w-32 bg-gray-700 rounded mb-2 animate-pulse"></div>
+        <div className="h-4 w-24 bg-gray-700 rounded mb-4 animate-pulse"></div>
+        <div className="w-full space-y-3 mb-6">
+          <div className="h-4 w-full bg-gray-700 rounded animate-pulse"></div>
+          <div className="h-4 w-full bg-gray-700 rounded animate-pulse"></div>
+        </div>
+        <div className="w-full space-y-3">
+          <div className="h-10 w-full bg-gray-700 rounded animate-pulse"></div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="h-10 w-full bg-gray-700 rounded animate-pulse"></div>
+            <div className="h-10 w-full bg-gray-700 rounded animate-pulse"></div>
+            <div className="h-10 w-full bg-gray-700 rounded animate-pulse col-span-full"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const AddressSkeleton = () => (
+  <div className="lg:w-2/3 w-full space-y-6">
+    <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700">
+      <div className="flex justify-between items-center mb-6">
+        <div className="h-6 w-32 bg-gray-700 rounded animate-pulse"></div>
+        <div className="h-10 w-10 bg-gray-700 rounded animate-pulse"></div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {[1, 2].map((item) => (
+          <div key={item} className="p-5 bg-gray-700 rounded-xl animate-pulse">
+            <div className="h-4 w-32 bg-gray-600 rounded mb-3"></div>
+            <div className="space-y-2">
+              <div className="h-3 w-full bg-gray-600 rounded"></div>
+              <div className="h-3 w-full bg-gray-600 rounded"></div>
+              <div className="h-3 w-2/3 bg-gray-600 rounded"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
 
 function UserPageContent() {
   const router = useRouter();
@@ -169,18 +214,32 @@ function UserPageContent() {
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8 min-h-screen">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="flex flex-col items-center justify-center h-full"
-        >
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            className="rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-500"
-          />
-          <p className="mt-4 text-emerald-500 font-medium">Loading your profile...</p>
-        </motion.div>
+        <div className="space-y-6">
+          <Button
+            as={Link}
+            href='/home'
+            variant='flat'
+            color='success'
+            className='mb-6'
+          >
+            <div className="flex items-center gap-2">
+              <IoIosArrowRoundBack size={24} />
+              <span>Back to Home</span>
+            </div>
+          </Button>
+
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+            My Profile
+          </h1>
+          <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-2xl">
+            Manage your personal information and addresses
+          </p>
+
+          <div className="flex flex-col lg:flex-row gap-8">
+            <ProfileSkeleton />
+            <AddressSkeleton />
+          </div>
+        </div>
       </div>
     );
   }
@@ -221,74 +280,40 @@ function UserPageContent() {
     );
   }
 
-  // Animation variants
-  const buttonVariants = {
-    hover: { scale: 1.02, transition: { duration: 0.2, ease: easeInOut } },
-    tap: { scale: 0.98 }
-  };
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1 }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.5 }
-    }
-  };
-
   return (
     <div className="container mx-auto px-4 py-8 min-h-screen">
-      <motion.div
-        initial="hidden"
-        animate="visible"
-        variants={containerVariants}
-        className="space-y-6"
-      >
+      <div className="space-y-6">
         {/* Back Button */}
-        <motion.div variants={itemVariants}>
-          <Button
-            as={Link}
-            href='/home'
-            variant='flat'
-            color='success'
-            className='mb-6'
-          >
-            <div className="flex items-center gap-2">
-              <IoIosArrowRoundBack size={24} />
-              <span>Back to Home</span>
-            </div>
-          </Button>
-        </motion.div>
+        <Button
+          as={Link}
+          href='/home'
+          variant='flat'
+          color='success'
+          className='mb-6'
+        >
+          <div className="flex items-center gap-2">
+            <IoIosArrowRoundBack size={24} />
+            <span>Back to Home</span>
+          </div>
+        </Button>
 
         {/* Page Header */}
-        <motion.h1 variants={itemVariants} className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
           My Profile
-        </motion.h1>
-        <motion.p variants={itemVariants} className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-2xl">
+        </h1>
+        <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-2xl">
           Manage your personal information and addresses
-        </motion.p>
+        </p>
 
         {/* Main Content */}
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Profile Section */}
-          <motion.div variants={itemVariants} className="lg:w-1/3 w-full space-y-6">
+          <div className="lg:w-1/3 w-full space-y-6">
             <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-xl p-6 border border-gray-700/50 overflow-hidden relative">
               <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/10 to-blue-900/10 -z-10" />
               <div className="flex flex-col items-center text-center">
                 {/* Profile Image */}
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="mb-4"
-                >
+                <div className="mb-4">
                   {!imageError ? (
                     <Image
                       src="/default-profile.png"
@@ -306,17 +331,12 @@ function UserPageContent() {
                       </span>
                     </div>
                   )}
-                </motion.div>
+                </div>
 
                 {/* User Info */}
-                <motion.h2
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                  className="text-2xl font-bold text-white mb-1"
-                >
+                <h2 className="text-2xl font-bold text-white mb-1">
                   {userDataResponse?.data?.name || "User"}
-                </motion.h2>
+                </h2>
 
                 <div className="flex items-center gap-2 text-emerald-300 mb-3">
                   <span className={`h-2 w-2 rounded-full ${userDataResponse?.data?.active ? 'bg-green-500' : 'bg-red-500'}`}></span>
@@ -343,156 +363,121 @@ function UserPageContent() {
 
                 {/* Action Buttons */}
                 <div className="w-full space-y-3">
-                  <motion.div whileHover="hover" whileTap="tap" variants={buttonVariants}>
-                    <Button
-                      as={Link}
-                      href="/allorders"
-                      className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-medium py-3"
-                    >
-                      <div className="flex items-center justify-center gap-2">
-                        <IoIosPaper size={18} />
-                        <span>My Orders</span>
-                      </div>
-                    </Button>
-                  </motion.div>
+                  <Button
+                    as={Link}
+                    href="/allorders"
+                    className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-medium py-3"
+                  >
+                    <div className="flex items-center justify-center gap-2">
+                      <IoIosPaper size={18} />
+                      <span>My Orders</span>
+                    </div>
+                  </Button>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <motion.div whileHover="hover" whileTap="tap" variants={buttonVariants}>
-                      <Button
-                        variant="flat"
-                        color="primary"
-                        className="bg-gray-700 hover:bg-gray-600 text-blue-200 hover:text-white py-3 w-full"
-                      >
-                        <div className="flex items-center justify-center gap-2">
-                          <Lock size={18} />
-                          <span className="text-sm">Reset Password</span>
-                        </div>
-                      </Button>
-                    </motion.div>
+                    <Button
+                      variant="flat"
+                      color="primary"
+                      className="bg-gray-700 hover:bg-gray-600 text-blue-200 hover:text-white py-3 w-full"
+                    >
+                      <div className="flex items-center justify-center gap-2">
+                        <Lock size={18} />
+                        <span className="text-sm">Reset Password</span>
+                      </div>
+                    </Button>
 
-                    <motion.div whileHover="hover" whileTap="tap" variants={buttonVariants}>
-                      <Button
-                        variant="flat"
-                        color="primary"
-                        className="bg-gray-700 hover:bg-gray-600 text-blue-200 hover:text-white py-3 w-full"
-                      >
-                        <div className="flex items-center justify-center gap-2">
-                          <User size={18} />
-                          <span className="text-sm">Update Profile</span>
-                        </div>
-                      </Button>
-                    </motion.div>
+                    <Button
+                      variant="flat"
+                      color="primary"
+                      className="bg-gray-700 hover:bg-gray-600 text-blue-200 hover:text-white py-3 w-full"
+                    >
+                      <div className="flex items-center justify-center gap-2">
+                        <User size={18} />
+                        <span className="text-sm">Update Profile</span>
+                      </div>
+                    </Button>
 
-                    <motion.div whileHover="hover" whileTap="tap" variants={buttonVariants} className="col-span-full">
-                      <Button
-                        variant="flat"
-                        color="primary"
-                        className="bg-gray-700 hover:bg-gray-600 text-blue-200 hover:text-white py-3 w-full"
-                      >
-                        <div className="flex items-center justify-center gap-2">
-                          <RefreshCw size={18} />
-                          <span className="text-sm">Update Password</span>
-                        </div>
-                      </Button>
-                    </motion.div>
+                    <Button
+                      variant="flat"
+                      color="primary"
+                      className="bg-gray-700 hover:bg-gray-600 text-blue-200 hover:text-white py-3 w-full col-span-full"
+                    >
+                      <div className="flex items-center justify-center gap-2">
+                        <RefreshCw size={18} />
+                        <span className="text-sm">Update Password</span>
+                      </div>
+                    </Button>
                   </div>
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* Addresses Section */}
-          <motion.div variants={itemVariants} className="lg:w-2/3 w-full space-y-6">
+          <div className="lg:w-2/3 w-full space-y-6">
             <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-xl p-6 border border-gray-700/50">
               <div className="flex justify-between items-center mb-6">
-                <motion.h2
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.1 }}
-                  className="text-2xl font-bold text-white"
-                >
+                <h2 className="text-2xl font-bold text-white">
                   My Addresses
-                </motion.h2>
+                </h2>
                 <AdressModal />
               </div>
 
               {addressesData?.data?.length === 0 ? (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-center py-12"
-                >
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", stiffness: 260, damping: 20 }}
-                    className="mb-4"
-                  >
+                <div className="text-center py-12">
+                  <div className="mb-4">
                     <Home className="w-16 h-16 text-gray-400 mx-auto" />
-                  </motion.div>
+                  </div>
                   <h3 className="text-xl font-semibold text-gray-300 mb-2">
                     No Addresses Found
                   </h3>
                   <p className="text-gray-400 max-w-md mx-auto">
                     Add your first address to make checkout faster and easier
                   </p>
-                </motion.div>
+                </div>
               ) : (
-                <motion.div
-                  variants={containerVariants}
-                  className="grid grid-cols-1 md:grid-cols-2 gap-4"
-                >
-                  <AnimatePresence>
-                    {addressesData?.data?.map((address) => (
-                      <motion.div
-                        key={address._id}
-                        variants={itemVariants}
-                        layout
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, x: -100 }}
-                        transition={{ duration: 0.3 }}
-                        className="p-5 bg-gray-800/50 rounded-xl border border-gray-700 hover:border-emerald-500 transition-colors relative overflow-hidden group"
-                      >
-                        <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/10 to-blue-900/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                        <div className="relative z-10">
-                          <div className="flex justify-between items-start mb-3">
-                            <h3 className="text-xl font-medium text-white">{address.name}</h3>
-                            <motion.button
-                              onClick={() => handleDeleteAddress(address._id)}
-                              disabled={deleteAddressMutation.isPending}
-                              whileHover={{ scale: 1.1 }}
-                              whileTap={{ scale: 0.9 }}
-                              className="p-1.5 rounded-full bg-red-900/50 hover:bg-red-800 text-red-300 hover:text-white transition-colors"
-                              title="Delete address"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </motion.button>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {addressesData?.data?.map((address) => (
+                    <div
+                      key={address._id}
+                      className="p-5 bg-gray-800/50 rounded-xl border border-gray-700 hover:border-emerald-500 transition-colors relative overflow-hidden group"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/10 to-blue-900/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <div className="relative z-10">
+                        <div className="flex justify-between items-start mb-3">
+                          <h3 className="text-xl font-medium text-white">{address.name}</h3>
+                          <button
+                            onClick={() => handleDeleteAddress(address._id)}
+                            disabled={deleteAddressMutation.isPending}
+                            className="p-1.5 rounded-full bg-red-900/50 hover:bg-red-800 text-red-300 hover:text-white transition-colors"
+                            title="Delete address"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="flex items-start gap-2 text-gray-300">
+                            <MapPin className="h-5 w-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                            <p className="text-sm">{address.details}</p>
                           </div>
-                          <div className="space-y-2">
-                            <div className="flex items-start gap-2 text-gray-300">
-                              <MapPin className="h-5 w-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                              <p className="text-sm">{address.details}</p>
-                            </div>
-                            <div className="flex items-center gap-2 text-gray-300">
-                              <Home className="h-5 w-5 text-emerald-400 flex-shrink-0" />
-                              <p className="text-sm">{address.city}</p>
-                            </div>
-                            <div className="flex items-center gap-2 text-gray-300">
-                              <Phone className="h-5 w-5 text-emerald-400 flex-shrink-0" />
-                              <p className="text-sm">{address.phone}</p>
-                            </div>
+                          <div className="flex items-center gap-2 text-gray-300">
+                            <Home className="h-5 w-5 text-emerald-400 flex-shrink-0" />
+                            <p className="text-sm">{address.city}</p>
+                          </div>
+                          <div className="flex items-center gap-2 text-gray-300">
+                            <Phone className="h-5 w-5 text-emerald-400 flex-shrink-0" />
+                            <p className="text-sm">{address.phone}</p>
                           </div>
                         </div>
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
-                </motion.div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
-          </motion.div>
+          </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
