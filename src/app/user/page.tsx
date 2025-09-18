@@ -269,7 +269,7 @@ function UserPageContent() {
                 >
                   {!imageError ? (
                     <img
-                      src={""}
+                      src={"https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.shutterstock.com%2Fsearch%2Fdefault-user&psig=AOvVaw26F7-mP9aj8xricjjyZ2Y8&ust=1758282343013000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCMjR96We4o8DFQAAAAAdAAAAABAE"}
                       alt="User Profile"
                       className="w-32 h-32 rounded-full object-cover border-4 border-emerald-500 shadow-lg"
                       onError={handleImageError}
