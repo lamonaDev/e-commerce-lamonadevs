@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { MainContext } from "@/app/_Context/MainContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
@@ -13,6 +13,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { IoIosPaper } from "react-icons/io";
 import { easeInOut } from "framer-motion";
 import Image from "next/image";
+
 interface Address {
   _id: string;
   name: string;
@@ -59,49 +60,60 @@ function UserPageContent() {
   const { userToken, userData } = useContext(MainContext) as { userToken: string | null; userData: object | null };
   const [imageError, setImageError] = useState(false);
   const [activeTab, setActiveTab] = useState("profile");
+  const [isMounted, setIsMounted] = useState(false);
   const queryClient = useQueryClient();
+
+  // Ensure component is mounted before rendering
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://ecommerce.routemisr.com/api/v1";
 
   const { data, isLoading, error } = useQuery<AddressesResponse, Error>({
     queryKey: ["addresses", userToken],
     queryFn: async () => {
       if (!userToken) throw new Error("User not authenticated");
-      const response = await axios.get("https://ecommerce.routemisr.com/api/v1/addresses", {
+      const response = await axios.get(`${API_BASE_URL}/addresses`, {
         headers: { token: userToken },
       });
       return response.data;
     },
     enabled: !!userToken,
-    retry: 1,
+    retry: 2,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
   const { data: userDataFromToken } = useQuery<UserTokenResponse, Error>({
     queryKey: ["userDataFromToken", userToken],
     queryFn: async () => {
-      if (!userToken) throw new Error("user not authenticated");
-      const response = await axios.get("https://ecommerce.routemisr.com/api/v1/auth/verifyToken", {
+      if (!userToken) throw new Error("User not authenticated");
+      const response = await axios.get(`${API_BASE_URL}/auth/verifyToken`, {
         headers: { token: userToken }
       });
       return response?.data;
     },
     enabled: !!userToken,
-    retry: 1,
+    retry: 2,
+    staleTime: 5 * 60 * 1000,
   });
 
   const { data: userDataQuery } = useQuery<UserData, Error>({
     queryKey: ["userQuery", userDataFromToken?.decoded?.id],
     queryFn: async () => {
-      if (!userDataFromToken?.decoded?.id) throw new Error("user is not found");
-      const response = await axios.get(`https://ecommerce.routemisr.com/api/v1/users/${userDataFromToken?.decoded?.id}`);
+      if (!userDataFromToken?.decoded?.id) throw new Error("User not found");
+      const response = await axios.get(`${API_BASE_URL}/users/${userDataFromToken?.decoded?.id}`);
       return response?.data;
     },
     enabled: !!userDataFromToken?.decoded?.id,
     retry: 2,
+    staleTime: 5 * 60 * 1000,
   });
 
   const deleteAddressMutation = useMutation({
     mutationFn: async (addressId: string) => {
       if (!userToken) throw new Error("User not authenticated");
-      const response = await axios.delete(`https://ecommerce.routemisr.com/api/v1/addresses/${addressId}`, {
+      const response = await axios.delete(`${API_BASE_URL}/addresses/${addressId}`, {
         headers: { token: userToken },
       });
       return response;
@@ -137,14 +149,14 @@ function UserPageContent() {
 
   const buttonVariants = {
     hover: {
-      scale: 1.05,
+      scale: 1.02,
       transition: {
         duration: 0.2,
         ease: easeInOut
       }
     },
     tap: {
-      scale: 0.95
+      scale: 0.98
     }
   };
 
@@ -168,6 +180,10 @@ function UserPageContent() {
       }
     }
   };
+
+  if (!isMounted) {
+    return null; // or a loading skeleton
+  }
 
   if (isLoading) {
     return (
@@ -207,7 +223,17 @@ function UserPageContent() {
               <Trash2 className="w-16 h-16 text-red-500 mx-auto" />
             </motion.div>
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Error loading profile</h3>
-            <p className="text-gray-600 dark:text-gray-300">Please try refreshing the page or contact support.</p>
+            <p className="text-gray-600 dark:text-gray-300">
+              {error?.message || "Please try refreshing the page or contact support."}
+            </p>
+            <Button
+              onClick={() => window.location.reload()}
+              variant="flat"
+              color="primary"
+              className="mt-4"
+            >
+              Retry
+            </Button>
           </div>
         </motion.div>
       </div>
@@ -225,7 +251,6 @@ function UserPageContent() {
         <motion.div variants={itemVariants}>
           <motion.div
             whileHover="hover"
-            whileTap="tap"
             variants={buttonVariants}
           >
             <Button
@@ -270,15 +295,17 @@ function UserPageContent() {
                 >
                   {!imageError ? (
                     <Image
-                      src={""}
-                      alt={""}
+                      src="/default-profile.png" // Fallback image
+                      alt="Profile picture"
+                      width={128}
+                      height={128}
                       className="w-32 h-32 rounded-full object-cover border-4 border-emerald-500 shadow-lg"
                       onError={handleImageError}
                     />
                   ) : (
                     <div className="w-32 h-32 rounded-full bg-gradient-to-br from-emerald-500 to-blue-500 flex items-center justify-center border-4 border-emerald-500 shadow-lg">
                       <span className="text-4xl font-bold text-white">
-                        {userDataQuery?.data?.name?.split("")[0]?.toUpperCase()}
+                        {userDataQuery?.data?.name?.charAt(0)?.toUpperCase() || "U"}
                       </span>
                     </div>
                   )}
@@ -289,7 +316,7 @@ function UserPageContent() {
                   transition={{ delay: 0.2 }}
                   className="text-2xl font-bold text-white mb-1"
                 >
-                  {userDataQuery?.data?.name || "User Name"}
+                  {userDataQuery?.data?.name || "User"}
                 </motion.h2>
                 <div className="flex items-center gap-2 text-emerald-300 mb-3">
                   <span className={`h-2 w-2 rounded-full ${userDataQuery?.data?.active ? 'bg-green-500' : 'bg-red-500'}`}></span>
@@ -297,7 +324,7 @@ function UserPageContent() {
                 </div>
                 <div className="flex items-center gap-2 text-gray-300 mb-4">
                   <span className="bg-gray-700 px-2 py-1 rounded-full text-xs">
-                    {userDataQuery?.data?.role}
+                    {userDataQuery?.data?.role || "user"}
                   </span>
                 </div>
                 <div className="w-full space-y-3 mb-6">
