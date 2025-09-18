@@ -141,7 +141,7 @@ function CategoryContent() {
                 className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300"
               >
                 <Link
-                  href={`categories/${category?._id}`}
+                  href={`/categories/${category?._id}`}
                   className="block h-full"
                 >
                   <div className="relative h-48 md:h-56 overflow-hidden">
