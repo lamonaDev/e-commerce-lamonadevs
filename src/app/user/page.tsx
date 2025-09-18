@@ -11,6 +11,84 @@ import { IoIosArrowRoundBack, IoIosPaper } from "react-icons/io";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { Dialog } from '@headlessui/react';
+import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+
+const DeleteAddressModal = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  addressId,
+  isPending
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: (addressId: string) => void;
+  addressId: string;
+  isPending: boolean;
+}) => {
+  return (
+    <Dialog
+      open={isOpen}
+      onClose={onClose}
+      className="relative z-50"
+    >
+      <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+      <div className="fixed inset-0 flex items-center justify-center p-4">
+        <Dialog.Panel className="w-full max-w-md rounded-lg bg-white p-6 dark:bg-gray-800">
+          <div className="flex items-start">
+            <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10 dark:bg-red-900/20">
+              <ExclamationTriangleIcon
+                className="h-6 w-6 text-red-600 dark:text-red-400"
+                aria-hidden="true"
+              />
+            </div>
+            <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+              <Dialog.Title
+                as="h3"
+                className="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+              >
+                Delete Address
+              </Dialog.Title>
+              <div className="mt-2">
+                <p className="text-sm text-gray-500 dark:text-gray-300">
+                  Are you sure you want to delete this address? This action cannot be undone.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+            <button
+              type="button"
+              className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto disabled:opacity-70 disabled:cursor-not-allowed"
+              onClick={() => onConfirm(addressId)}
+              disabled={isPending}
+            >
+              {isPending ? (
+                <>
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Deleting...
+                </>
+              ) : 'Delete'}
+            </button>
+            <button
+              type="button"
+              className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto dark:bg-gray-700 dark:text-white dark:ring-gray-600 dark:hover:bg-gray-600 disabled:opacity-70 disabled:cursor-not-allowed"
+              onClick={onClose}
+              disabled={isPending}
+            >
+              Cancel
+            </button>
+          </div>
+        </Dialog.Panel>
+      </div>
+    </Dialog>
+  );
+};
+
 interface Address {
   _id: string;
   name: string;
@@ -52,6 +130,7 @@ interface UserDataResponse {
     __v: number;
   };
 }
+
 const ProfileSkeleton = () => (
   <div className="lg:w-1/3 w-full space-y-6">
     <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700">
@@ -75,6 +154,7 @@ const ProfileSkeleton = () => (
     </div>
   </div>
 );
+
 const AddressSkeleton = () => (
   <div className="lg:w-2/3 w-full space-y-6">
     <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700">
@@ -97,15 +177,20 @@ const AddressSkeleton = () => (
     </div>
   </div>
 );
+
 function UserPageContent() {
   const router = useRouter();
   const { userToken, userData } = useContext(MainContext) || { userToken: null, userData: null };
   const [imageError, setImageError] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [addressToDelete, setAddressToDelete] = useState<string | null>(null);
   const queryClient = useQueryClient();
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
   useEffect(() => {
     if (!userToken && isMounted) {
       router.push('/login');
@@ -159,6 +244,7 @@ function UserPageContent() {
         style: { borderRadius: '10px', background: '#333', color: '#fff' }
       });
       queryClient.invalidateQueries({ queryKey: ["addresses"] });
+      setIsDeleteModalOpen(false);
     },
     onError: (error: AxiosError<{message: string}>) => {
       toast.error(error.response?.data?.message || "Failed to delete address", {
@@ -167,9 +253,11 @@ function UserPageContent() {
     },
   });
   const handleDeleteAddress = (addressId: string) => {
-    if (window.confirm("Are you sure you want to delete this address?")) {
-      deleteAddressMutation.mutate(addressId);
-    }
+    setAddressToDelete(addressId);
+    setIsDeleteModalOpen(true);
+  };
+  const confirmDeleteAddress = (addressId: string) => {
+    deleteAddressMutation.mutate(addressId);
   };
   const handleImageError = () => setImageError(true);
   const isLoading = isLoadingAddresses || isLoadingToken || isLoadingUserData;
@@ -250,6 +338,17 @@ function UserPageContent() {
   }
   return (
     <div className="container mx-auto px-4 py-8 min-h-screen">
+      {/* Delete Address Modal */}
+      <DeleteAddressModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setAddressToDelete(null);
+        }}
+        onConfirm={confirmDeleteAddress}
+        addressId={addressToDelete || ''}
+        isPending={deleteAddressMutation.isPending}
+      />
       <div className="space-y-6">
         <Button
           as={Link}
@@ -395,9 +494,9 @@ function UserPageContent() {
                           <h3 className="text-xl font-medium text-white">{address.name}</h3>
                           <button
                             onClick={() => handleDeleteAddress(address._id)}
-                            disabled={deleteAddressMutation.isPending}
-                            className="p-1.5 rounded-full bg-red-900/50 hover:bg-red-800 text-red-300 hover:text-white transition-colors"
+                            className="p-1.5 rounded-full bg-red-900/50 hover:bg-red-800 text-red-300 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             title="Delete address"
+                            disabled={deleteAddressMutation.isPending}
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -428,7 +527,6 @@ function UserPageContent() {
     </div>
   );
 }
-
 export default function UserPage() {
   return <UserPageContent />;
 }
