@@ -295,7 +295,7 @@ function UserPageContent() {
                 >
                   {!imageError ? (
                     <Image
-                      src="/default-profile.png" // Fallback image
+                      src="" // Fallback image
                       alt="Profile picture"
                       width={128}
                       height={128}
