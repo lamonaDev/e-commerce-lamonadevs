@@ -12,6 +12,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoIosPaper } from "react-icons/io";
 import { easeInOut } from "framer-motion";
+import Image from "next/image";
 interface Address {
   _id: string;
   name: string;
@@ -268,9 +269,9 @@ function UserPageContent() {
                   className="mb-4"
                 >
                   {!imageError ? (
-                    <img
-                      src={"https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.shutterstock.com%2Fsearch%2Fdefault-user&psig=AOvVaw26F7-mP9aj8xricjjyZ2Y8&ust=1758282343013000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCMjR96We4o8DFQAAAAAdAAAAABAE"}
-                      alt="User Profile"
+                    <Image
+                      src={""}
+                      alt={""}
                       className="w-32 h-32 rounded-full object-cover border-4 border-emerald-500 shadow-lg"
                       onError={handleImageError}
                     />
