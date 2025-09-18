@@ -269,7 +269,7 @@ function UserPageContent() {
                 >
                   {!imageError ? (
                     <img
-                      // src="https://ecommerce.routemisr.com/api/v1/users/profile-image"
+                      src={""}
                       alt="User Profile"
                       className="w-32 h-32 rounded-full object-cover border-4 border-emerald-500 shadow-lg"
                       onError={handleImageError}
