@@ -26,8 +26,8 @@ export default function LoginLayout({
 }>) {
   return (
     <>
-        <div className="min-h-screen flex flex-col">
-          <div className="mb-[13vh]">
+        <div className="min-h-screen flex flex-col bg-blue-50">
+          <div className="mb-[8vh]">
             <WelcomeNavBarComponent /> 
           </div>
           <main className="flex-grow"> 

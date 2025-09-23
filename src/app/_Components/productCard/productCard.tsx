@@ -100,7 +100,7 @@ export default function ProductCard({
       return response.data;
     },
     onSuccess: (data) => {
-      toast.success("Product added to cart successfully");
+      // toast.success("Product added to cart successfully");
       const currentCount = queryClient.getQueryData<number>(["cartItemCount", userToken]) || 0;
       queryClient.setQueryData(["cartItemCount", userToken], currentCount + 1);
       setNumberOfCart(currentCount + 1);
@@ -141,7 +141,6 @@ export default function ProductCard({
           headers: { token: userToken },
         });
         setIsWishlisted(false);
-        // toast.success("Product removed from wishlist");
       } else {
         await axios.post(
           "https://ecommerce.routemisr.com/api/v1/wishlist",
@@ -149,13 +148,12 @@ export default function ProductCard({
           { headers: { token: userToken } }
         );
         setIsWishlisted(true);
-        // toast.success("Product added to wishlist successfully");
       }
       onAddToWishlist?.(product);
     } catch (error: unknown) {
-        const axiosError = error as AxiosError<{ message: string }>;
-        toast.error(axiosError.response?.data?.message || `Failed to ${isWishlisted ? "remove from" : "add to"} wishlist`);
-        setIsWishlisted(isWishlisted);
+      const axiosError = error as AxiosError<{ message: string }>;
+      toast.error(axiosError.response?.data?.message || `Failed to ${isWishlisted ? "remove from" : "add to"} wishlist`);
+      setIsWishlisted(isWishlisted);
     } finally {
       setIsUpdatingWishlist(false);
     }
@@ -233,8 +231,8 @@ export default function ProductCard({
             <img
               src={product.imageCover || product.images?.[0]}
               alt={product.title}
-              className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ${
-                imageLoading ? "opacity-0" : "opacity-100"
+              className={`w-full h-full object-cover transition-transform duration-300 ${
+                imageLoading ? "opacity-0" : "opacity-100 group-hover:scale-105"
               }`}
               onError={handleImageError}
               onLoad={handleImageLoad}
@@ -252,18 +250,6 @@ export default function ProductCard({
               </div>
             </div>
           )}
-          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
-            <Button
-              as={Link}
-              href={`/home/products/${product._id}`}
-              variant="solid"
-              className="bg-white text-gray-900 hover:bg-gray-100 py-1 px-3 text-xs md:py-2 md:px-4 md:text-sm"
-              size="sm"
-            >
-              <Eye className="w-3 h-3 md:w-4 md:h-4 mr-1" />
-              Quick View
-            </Button>
-          </div>
         </div>
       </Link>
       <div className="p-3 md:p-4">

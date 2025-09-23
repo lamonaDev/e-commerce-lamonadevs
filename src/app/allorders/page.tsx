@@ -363,10 +363,10 @@ export default function AllOrdersPage() {
           animate={{ opacity: 1 }}
           className="mb-8"
         >
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <motion.div >
             <Button
               as={Link}
-              href='/home'
+              href='/user'
               variant='flat'
               color='success'
               className='mb-4 md:mb-6'
@@ -374,7 +374,6 @@ export default function AllOrdersPage() {
               <IoIosArrowRoundBack size={30}/>
             </Button>
           </motion.div>
-
           <motion.h1
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -383,7 +382,6 @@ export default function AllOrdersPage() {
           >
             Your Orders
           </motion.h1>
-
           <motion.p
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -393,7 +391,6 @@ export default function AllOrdersPage() {
             View and manage your recent orders and track their status
           </motion.p>
         </motion.div>
-
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -420,7 +417,6 @@ export default function AllOrdersPage() {
                         <Clock className="w-6 h-6 text-yellow-600" />
                       )}
                     </div>
-
                     <div>
                       <div className="flex items-center gap-2">
                         <h2 className="text-xl font-semibold text-gray-800">
@@ -434,14 +430,12 @@ export default function AllOrdersPage() {
                           {order.isDelivered ? 'Delivered' : 'Processing'}
                         </span>
                       </div>
-
                       <div className="flex items-center gap-2 text-gray-500 text-sm mt-1">
                         <Clock className="w-4 h-4" />
                         <span>{formatDate(order.createdAt)}</span>
                       </div>
                     </div>
                   </div>
-
                   <div className="flex items-center gap-4 md:gap-6">
                     <div className="text-right">
                       <p className="text-lg font-medium text-gray-800">
@@ -451,7 +445,6 @@ export default function AllOrdersPage() {
                         {order.cartItems.length} item{order.cartItems.length !== 1 ? 's' : ''}
                       </p>
                     </div>
-
                     <motion.button
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
@@ -549,7 +542,6 @@ export default function AllOrdersPage() {
                               <Truck className="w-5 h-5 text-gray-600" />
                               Shipping Address
                             </h3>
-
                             <div className="text-gray-600 text-sm space-y-1">
                               <p className="flex items-center gap-2">
                                 <Home className="w-4 h-4 text-gray-500" />

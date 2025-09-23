@@ -8,13 +8,13 @@ import MainUserContext, { MainContext } from "@/app/_Context/MainContext";
 import { useQuery, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { FaUser, FaBars, FaTimeline } from "react-icons/fa6";
 import { GoSignOut } from "react-icons/go";
-import { motion, AnimatePresence } from "framer-motion";
+import { MdHome, MdCategory, MdFavorite, MdStore } from "react-icons/md";
 import { usePathname } from "next/navigation";
 
 interface NavItem {
   name: string;
   href: string;
-  icon: React.ReactNode | null;
+  icon: React.ReactNode;
   onClick?: () => void;
   danger?: boolean;
 }
@@ -98,71 +98,30 @@ function UserNavBarContent() {
   }
 
   const navItems: NavItem[] = [
-    { name: "Home", href: "/home", icon: null },
+    { name: "Home", href: "/home", icon: <MdHome size={18} className="mr-2" /> },
     { name: "Cart", href: "/cart", icon: <RiShoppingBasket2Fill size={18} className="mr-2" /> },
-    { name: "Brands", href: "/brands", icon: null },
-    { name: "Categories", href: "/categories", icon: null },
-    { name: "Wishlist", href: "/wishlist", icon: null },
+    { name: "Brands", href: "/brands", icon: <MdStore size={18} className="mr-2" /> },
+    { name: "Categories", href: "/categories", icon: <MdCategory size={18} className="mr-2" /> },
+    { name: "Wishlist", href: "/wishlist", icon: <MdFavorite size={18} className="mr-2" /> },
     { name: "Profile", href: "/user", icon: <FaUser size={18} className="mr-2" /> },
     { name: "Logout", href: "/", onClick: handleLogout, icon: <GoSignOut size={18} className="mr-2" />, danger: true },
   ];
-
-  const navVariants = {
-    hidden: { opacity: 0, y: -20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        type: "spring" as const,
-        stiffness: 100,
-        damping: 10,
-      },
-    },
-  };
-
-  const mobileMenuVariants = {
-    open: {
-      opacity: 1,
-      height: "auto",
-      transition: {
-        stiffness: 200,
-        damping: 20,
-      },
-    },
-    closed: {
-      opacity: 0,
-      height: 0,
-      transition: {
-        stiffness: 200,
-        damping: 20,
-      },
-    },
-  };
 
   const cartItemCount = cartData?.numOfCartItems || numberOfCart || 0;
 
   return (
     <>
-      <motion.nav
-        initial="hidden"
-        animate="visible"
-        variants={navVariants}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 h-14 ${
-          scrolled ? "bg-white/90 backdrop-blur-sm shadow-sm" : "bg-white/50"
-        }`}
-      >
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 h-16 ${
+        scrolled ? "bg-white/90 backdrop-blur-sm shadow-sm" : "bg-white/50"
+      }`}>
         <Navbar maxWidth="full" className="px-4 py-3 h-full">
           <NavbarBrand>
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex items-center"
-            >
+            <div className="flex items-center">
               <PiShoppingCartSimpleBold size={28} className="text-purple-600" />
               <span className="ml-2 text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 text-transparent bg-clip-text">
                 E-commerce
               </span>
-            </motion.div>
+            </div>
           </NavbarBrand>
 
           <NavbarContent className="hidden md:flex gap-6" justify="center">
@@ -179,10 +138,7 @@ function UserNavBarContent() {
                 >
                   {item.name}
                   {pathname === item.href && (
-                    <motion.div
-                      layoutId="underline"
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-purple-600 rounded-full"
-                    />
+                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-purple-600 rounded-full" />
                   )}
                 </Link>
               </NavbarItem>
@@ -190,19 +146,17 @@ function UserNavBarContent() {
           </NavbarContent>
 
           <NavbarContent className="md:hidden" justify="end">
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
+            <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="p-2 rounded-md text-gray-700 hover:bg-gray-100"
             >
               {isMenuOpen ? <FaTimeline size={20} /> : <FaBars size={20} />}
-            </motion.button>
+            </button>
           </NavbarContent>
 
           <NavbarContent justify="end" className="gap-2 hidden md:flex">
             <NavbarItem>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <div>
                 <Button
                   as={Link}
                   href="/cart"
@@ -212,26 +166,22 @@ function UserNavBarContent() {
                 >
                   <RiShoppingBasket2Fill size={20} />
                   {cartItemCount > 0 && (
-                    <motion.span
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      className="absolute top-1 right-1 bg-amber-800 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
-                    >
+                    <span className="absolute top-1 right-1 bg-amber-800 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                       {cartItemCount}
-                    </motion.span>
+                    </span>
                   )}
                 </Button>
-              </motion.div>
+              </div>
             </NavbarItem>
             <NavbarItem>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <div>
                 <Button as={Link} color="success" href="/user" variant="flat">
                   <FaUser size={20} />
                 </Button>
-              </motion.div>
+              </div>
             </NavbarItem>
             <NavbarItem>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <div>
                 <Button
                   as={Link}
                   color="danger"
@@ -241,30 +191,24 @@ function UserNavBarContent() {
                 >
                   Log out
                 </Button>
-              </motion.div>
+              </div>
             </NavbarItem>
           </NavbarContent>
         </Navbar>
-      </motion.nav>
+      </nav>
 
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div
-            variants={mobileMenuVariants}
-            initial="closed"
-            animate="open"
-            exit="closed"
-            className="md:hidden bg-white shadow-lg rounded-b-lg overflow-hidden fixed top-14 left-0 right-0 z-40"
-          >
+      {isMenuOpen && (
+        <div className="md:hidden bg-white shadow-lg rounded-b-lg overflow-hidden fixed top-14 left-0 right-0 z-40">
+          <div className="flex flex-col items-center">
             {navItems.map((item) => (
-              <motion.div key={item.name} variants={navVariants}>
+              <div key={item.name} className="w-full">
                 <Link
                   href={item.href}
                   onClick={() => {
                     if (item.onClick) item.onClick();
                     setIsMenuOpen(false);
                   }}
-                  className={`block px-4 py-3 text-sm font-medium flex items-center ${
+                  className={`flex items-center justify-center px-4 py-3 text-sm font-medium w-full ${
                     item.danger
                       ? "text-red-500 hover:bg-red-50"
                       : pathname === item.href
@@ -272,18 +216,19 @@ function UserNavBarContent() {
                       : "text-gray-700 hover:text-purple-600 hover:bg-gray-50"
                   }`}
                 >
-                  {item.icon} {item.name}
+                  {item.icon}
+                  <span>{item.name}</span>
                   {item.name === "Cart" && cartItemCount > 0 && (
-                    <span className="ml-auto bg-amber-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                    <span className="ml-2 bg-amber-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                       {cartItemCount}
                     </span>
                   )}
                 </Link>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+        </div>
+      )}
     </>
   );
 }

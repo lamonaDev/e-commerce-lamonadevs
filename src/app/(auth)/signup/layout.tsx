@@ -26,7 +26,7 @@ export default function SignupLayout({
 }>) {
   return (
     <>
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col bg-blue-50">
         <div className="mb-[13vh]">
           <WelcomeNavBarComponent /> 
         </div>
