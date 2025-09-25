@@ -9,11 +9,9 @@ import ProductCard, { Product } from "../../_Components/productCard/productCard"
 import { Heart, ShoppingCart, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProductFromCat } from "../categories/[...slug]/page";
-
 type WishlistResponse = {
   data: Product[];
 };
-
 function WishlistContent() {
   const { userToken } = useContext(MainContext) as { userToken: string | null };
   const queryClient = useQueryClient();
@@ -30,7 +28,6 @@ function WishlistContent() {
     },
     enabled: !!userToken,
   });
-
   const addToWishlistMutation = useMutation({
     mutationFn: async (productId: string) => {
       if (!userToken) throw new Error("User not authenticated");
@@ -67,7 +64,6 @@ function WishlistContent() {
       });
     },
   });
-
   const removeFromWishlistMutation = useMutation({
     mutationFn: async (productId: string) => {
       if (!userToken) throw new Error("User not authenticated");
@@ -99,7 +95,6 @@ function WishlistContent() {
       });
     },
   });
-
   const handleToggleWishlist = async (product: ProductFromCat) => {
     if (!userToken) {
       toast.error("Please log in to modify wishlist", {
@@ -128,7 +123,6 @@ function WishlistContent() {
       });
     }
   };
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -138,7 +132,6 @@ function WishlistContent() {
       }
     }
   };
-
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
     visible: {
@@ -150,7 +143,6 @@ function WishlistContent() {
       }
     }
   };
-
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-12 min-h-screen">
@@ -174,7 +166,6 @@ function WishlistContent() {
       </div>
     );
   }
-
   if (error || !data) {
     return (
       <div className="container mx-auto px-4 py-12 min-h-screen">
@@ -203,7 +194,6 @@ function WishlistContent() {
       </div>
     );
   }
-
   return (
     <div className="container mx-auto px-4 py-12 min-h-screen">
       <motion.div
@@ -214,7 +204,6 @@ function WishlistContent() {
         <h1 className="text-4xl font-bold mb-8 bg-gradient-to-r from-pink-500 to-red-500 text-transparent bg-clip-text">
           Your Wishlist
         </h1>
-
         {data.data.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -265,7 +254,6 @@ function WishlistContent() {
                 Clear all
               </motion.button>
             </div>
-
             <motion.div
               variants={containerVariants}
               initial="hidden"
@@ -298,7 +286,6 @@ function WishlistContent() {
     </div>
   );
 }
-
 export default function Wishlist() {
   useEffect(() => {
     window.document.title = "WishList Page"
@@ -311,7 +298,6 @@ export default function Wishlist() {
       },
     },
   });
-
   return (
     <ProtectedRoute>
       <Suspense fallback={

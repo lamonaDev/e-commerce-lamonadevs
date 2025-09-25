@@ -5,18 +5,20 @@ import { Button } from "@heroui/react";
 import Link from "next/link";
 import {
   ArrowRight,
-  ShoppingBag,
-  Star,
-  TrendingUp,
-  ChevronLeft,
-  ChevronRight,
-  Sparkles,
-  ShoppingCart,
-  Heart,
-  Search,
-  LayoutGrid,
+    ShoppingBag,
+      Star,
+        TrendingUp,
+          ChevronLeft,
+            ChevronRight,
+              Sparkles,
+            ShoppingCart,
+          Heart,
+      Search,
+    LayoutGrid,
   Filter
 } from "lucide-react";
+import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { FiShoppingBag, FiInfo, FiMail, FiPhone, FiMapPin } from "react-icons/fi";
 import ProductCard, { Product } from "../../_Components/productCard/productCard";
 import ProductsApiService, { ProductsApiResponse } from "../../_Services/productsApi";
 import toast from "react-hot-toast";
@@ -51,7 +53,162 @@ const fadeIn = {
   animate: { opacity: 1 },
   exit: { opacity: 0 }
 };
-
+const Footer = () => {
+  const currentYear = new Date().getFullYear();
+  const navLinks = [
+    { name: "Products", path: "/home", icon: <FiShoppingBag className="mr-2" /> },
+    { name: "About Us", path: "/home", icon: <FiInfo className="mr-2" /> },
+    { name: "Blog", path: "/home", icon: <FiMail className="mr-2" /> },
+    { name: "Contact", path: "/home", icon: <FiPhone className="mr-2" /> },
+  ];
+  const contactInfo = [
+    { icon: <FaPhoneAlt className="text-xl" />, text: "+201552326055" },
+    { icon: <FaEnvelope className="text-xl" />, text: "aymanmohamed.programmer@gmail.com" },
+    { icon: <FaMapMarkerAlt className="text-xl" />, text: "Alex, Egy" },
+  ];
+  const socialLinks = [
+    { icon: <FaFacebook className="text-xl" />, path: "#" },
+    { icon: <FaTwitter className="text-xl" />, path: "#" },
+    { icon: <FaInstagram className="text-xl" />, path: "#" },
+    { icon: <FaLinkedin className="text-xl" />, path: "#" },
+  ];
+  return (
+    <footer className="bg-gradient-to-r from-purple-900 to-blue-900 text-white pt-16 pb-8">
+      <div className="container mx-auto px-4 md:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
+            Ready to elevate your shopping experience?
+          </h2>
+          <p className="text-lg mb-8 max-w-2xl mx-auto">
+            Join thousands of satisfied customers who trust us for quality products and exceptional service.
+          </p>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Link
+              href="/home"
+              className="inline-flex items-center px-8 py-4 bg-white text-purple-900 font-medium rounded-lg hover:bg-gray-100 transition-all"
+            >
+              Shop All Products
+              <FiShoppingBag className="ml-2" />
+            </Link>
+          </motion.div>
+        </motion.div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            <h3 className="text-xl font-bold mb-4 flex items-center">
+              <FiShoppingBag className="mr-2" /> E-commerce
+            </h3>
+            <p className="text-gray-300 mb-4">
+              Your one-stop destination for premium quality products with exceptional customer service.
+            </p>
+            <div className="flex space-x-4">
+              {socialLinks.map((social, index) => (
+                <motion.a
+                  key={index}
+                  href={social.path}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.1, color: "#f8fafc" }}
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  {social.icon}
+                </motion.a>
+              ))}
+            </div>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <h3 className="text-xl font-bold mb-4 flex items-center">
+              <FiMapPin className="mr-2" /> Quick Links
+            </h3>
+            <ul className="space-y-2">
+              {navLinks.map((link, index) => (
+                <li key={index}>
+                  <Link
+                    href={link.path}
+                    className="flex items-center text-gray-300 hover:text-white transition-colors"
+                  >
+                    {link.icon} {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            <h3 className="text-xl font-bold mb-4 flex items-center">
+              <FiPhone className="mr-2" /> Contact Us
+            </h3>
+            <ul className="space-y-3">
+              {contactInfo.map((contact, index) => (
+                <li key={index} className="flex items-center text-gray-300">
+                  <span className="mr-3">{contact.icon}</span>
+                  {contact.text}
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            <h3 className="text-xl font-bold mb-4 flex items-center">
+              <FiMail className="mr-2" /> Newsletter
+            </h3>
+            <p className="text-gray-300 mb-4">Subscribe to get the latest updates and offers.</p>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <input
+                type="email"
+                placeholder="Your email address"
+                className="flex-grow px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors"
+              >
+                Subscribe
+              </motion.button>
+            </div>
+          </motion.div>
+        </div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="border-t border-gray-100 pt-8 text-center text-gray-300"
+        >
+          <p>© {currentYear} E-commerce. All rights reserved.</p>
+          <div className="flex justify-center space-x-4 mt-2">
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+          </div>
+        </motion.div>
+      </div>
+    </footer>
+  );
+};
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -406,7 +563,7 @@ export default function Home() {
           </AnimatePresence>
         </div>
       </section>
-      <section className="py-16 md:py-20 bg-gradient-to-r from-purple-600 to-blue-600 text-white">
+      {/* <section className="py-16 md:py-20 bg-gradient-to-r from-purple-600 to-blue-600 text-white">
         <div className="container mx-auto px-4 md:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -432,7 +589,8 @@ export default function Home() {
             </motion.div>
           </motion.div>
         </div>
-      </section>
+      </section> */}
+      <Footer/>
     </ProtectedRoute>
   );
 }
