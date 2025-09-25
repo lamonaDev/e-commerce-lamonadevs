@@ -40,7 +40,7 @@ export default function WelcomeNavBarComponent() {
         scrolled ? "bg-white/90 backdrop-blur-sm shadow-sm" : "bg-white/50"
       }`}
     >
-      <Navbar maxWidth="full" className="px-4 py-3">
+      <Navbar maxWidth="full" className="px-3">
         <NavbarBrand className="gap-3">
           <div className="flex items-center">
             <MdOutlineShoppingCart className="text-2xl text-purple-600" />

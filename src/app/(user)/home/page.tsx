@@ -66,20 +66,24 @@ export default function Home() {
   useEffect(() => {
     setIsMounted(true);
   }, []);
-
+  useEffect(() => {
+    if (isMounted) {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+  }, [currentPage, isMounted]);
   const fetchProducts = async (page: number = 1) => {
     try {
       setIsLoading(true);
       setError(null);
-
       const response = await ProductsApiService.getProducts(page, productsPerPage);
-
       setProducts(response.data);
       setMetadata(response.metadata);
       setTotalPages(response.metadata.numberOfPages);
       setCurrentPage(page);
     } catch (err) {
-      console.error('Error fetching products:', err);
       setError('Failed to load products');
       toast.error('Failed to load products', {
         style: {
@@ -92,11 +96,9 @@ export default function Home() {
       setIsLoading(false);
     }
   };
-
   useEffect(() => {
     fetchProducts(currentPage);
   }, [currentPage]);
-
   const handleAddToCart = async (product: ProductFromCat) => {
     toast.success(`${product.title} added to cart`, {
       icon: <ShoppingCart className="w-5 h-5 text-emerald-500" />,
@@ -107,7 +109,6 @@ export default function Home() {
       }
     });
   };
-
   const handleAddToWishlist = async (product: ProductFromCat) => {
     toast.success(`${product.title} added to wishlist`, {
       icon: <Heart className="w-5 h-5 text-red-500" />,
@@ -118,16 +119,13 @@ export default function Home() {
       }
     });
   };
-
   if (!isMounted) return null;
-
   return (
     <ProtectedRoute>
       <section className="hero-section relative overflow-hidden bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 py-16 md:py-24 lg:py-32">
         <div className="absolute -top-10 -left-10 w-40 h-40 bg-purple-200 dark:bg-purple-900 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
         <div className="absolute -bottom-10 -right-10 w-60 h-60 bg-blue-200 dark:bg-blue-900 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
         <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-yellow-200 dark:bg-yellow-900 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob animation-delay-4000"></div>
-
         <div className="container mx-auto px-4 md:px-6 lg:px-8 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -143,17 +141,15 @@ export default function Home() {
             >
               <div className="flex items-center justify-center gap-3 bg-white dark:bg-gray-800 px-4 py-2 rounded-full shadow-lg">
                 <Sparkles className="w-6 h-6 text-blue-600" />
-                <span className="text-lg font-semibold text-gray-800 dark:text-white">New Collection 2023</span>
+                <span className="text-lg font-semibold text-gray-800 dark:text-white">New Collection 2025</span>
                 <Sparkles className="w-6 h-6 text-purple-600" />
               </div>
             </motion.div>
-
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
               Discover <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Exceptional</span>
               <br />
               Products <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">Just for You</span>
             </h1>
-
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -164,7 +160,6 @@ export default function Home() {
               <br className="hidden sm:block" />
               Quality, style, and innovation delivered to your doorstep.
             </motion.p>
-
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -181,7 +176,6 @@ export default function Home() {
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </motion.div>
-
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button
                   variant="bordered"
@@ -217,7 +211,6 @@ export default function Home() {
               </h2>
               <Star className="w-6 h-6 md:w-7 md:h-7 text-yellow-500" />
             </motion.div>
-
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -245,7 +238,6 @@ export default function Home() {
                   <span>All Categories</span>
                 </Button>
               </motion.div>
-
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button
                   variant="light"
@@ -256,7 +248,6 @@ export default function Home() {
                 </Button>
               </motion.div>
             </div>
-
             <div className="text-sm text-gray-600 dark:text-gray-400">
               Showing {products.length} of {metadata?.total || 0} products
             </div>
@@ -335,7 +326,6 @@ export default function Home() {
                     </motion.div>
                   ))}
                 </motion.div>
-
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -355,7 +345,6 @@ export default function Home() {
                       Previous
                     </Button>
                   </motion.div>
-
                   <div className="flex items-center gap-1">
                     {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
                       const pageNumber = i + 1;
@@ -373,7 +362,6 @@ export default function Home() {
                       );
                     })}
                   </div>
-
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Button
                       variant="bordered"

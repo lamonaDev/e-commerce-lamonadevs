@@ -67,7 +67,7 @@ export default function AddressModal() {
       toast.success("Address added successfully");
       invalidateCart();
       reset();
-      onOpenChange(); // Close the modal on success
+      onOpenChange();
     },
     onError: (error: AxiosError) => {
       const message =
@@ -103,9 +103,9 @@ export default function AddressModal() {
         isDismissable={false}
         isKeyboardDismissDisabled={true}
       >
-        <ModalContent>
+        <ModalContent className="mx-5">
           {(onClose) => (
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
+            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col mx-3">
               <ModalHeader className="flex flex-col gap-1">Add Address</ModalHeader>
               <ModalBody>
                 <div className="flex flex-col gap-6">

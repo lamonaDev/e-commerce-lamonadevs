@@ -183,7 +183,11 @@ export default function AllOrdersPage() {
         }
 
         const data = await response.json();
-        setOrders(data);
+        // Sort orders from newest to oldest
+        const sortedOrders = data.sort((a: Order, b: Order) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+        setOrders(sortedOrders);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An unknown error occurred');
       } finally {
@@ -276,7 +280,6 @@ export default function AllOrdersPage() {
           >
             <IoIosArrowRoundBack size={30}/>
           </Button>
-
           <div className="bg-white rounded-xl shadow-lg p-8 md:p-12 text-center border border-red-50">
             <motion.div
               initial={{ scale: 0 }}
@@ -286,10 +289,8 @@ export default function AllOrdersPage() {
             >
               <Package className="w-16 h-16 text-red-500 mx-auto" />
             </motion.div>
-
             <h2 className="text-2xl font-bold text-gray-800 mb-2">Error Loading Orders</h2>
             <p className="text-gray-600 mb-6 max-w-md mx-auto">{error}</p>
-
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

@@ -80,7 +80,7 @@ export default function Home() {
         const sortedProducts = response.data.sort((a, b) =>
           (b.ratingsAverage * b.sold) - (a.ratingsAverage * a.sold)
         );
-        setFeaturedProducts(sortedProducts.slice(0, 8));
+        setFeaturedProducts(sortedProducts.slice(0, 4));
       } catch (err) {
         console.error('Error fetching featured products:', err);
         setError('Failed to load featured products');
@@ -124,7 +124,9 @@ export default function Home() {
 
   return (
     <>
-      <WelcomeNavBarComponent />
+      <div className="mb-[6vh]">
+        <WelcomeNavBarComponent />
+      </div>
       <section className="hero-section relative overflow-hidden bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 py-16 md:py-24 lg:py-32">
         <div className="absolute -top-10 -left-10 w-40 h-40 bg-purple-200 dark:bg-purple-900 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
         <div className="absolute -bottom-10 -right-10 w-60 h-60 bg-blue-200 dark:bg-blue-900 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
@@ -273,7 +275,7 @@ export default function Home() {
                 animate="visible"
                 className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8"
               >
-                {[...Array(8)].map((_, i) => (
+                {[...Array(4)].map((_, i) => (
                   <motion.div
                     key={`skeleton-${i}`}
                     variants={itemVariants}

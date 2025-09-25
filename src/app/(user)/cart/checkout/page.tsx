@@ -92,7 +92,6 @@ export default function CheckOutPage() {
       return response.data;
     },
     onSuccess: () => {
-      toast.success("Cart cleared successfully");
       invalidateCart();
       queryClient.invalidateQueries({ queryKey: ["cart"] });
     },
@@ -155,7 +154,6 @@ export default function CheckOutPage() {
       }
     },
     onSuccess: (result: { paymentMethod: string; data:{ session: {url: string} }}) => {
-      toast.success("Order placed successfully");
       if (result.paymentMethod === "online" && result.data.session && result.data.session.url) {
         window.location.href = result.data.session.url;
       } else if (result.paymentMethod === "cash") {
