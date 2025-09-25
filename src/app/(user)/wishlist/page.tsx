@@ -1,6 +1,6 @@
 "use client";
 import { ProtectedRoute } from "@/_routes/route.route";
-import { Suspense, useContext } from "react";
+import { Suspense, useContext, useEffect } from "react";
 import { MainContext } from "@/app/_Context/MainContext";
 import { QueryClient, QueryClientProvider, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios, {AxiosError} from "axios";
@@ -300,6 +300,9 @@ function WishlistContent() {
 }
 
 export default function Wishlist() {
+  useEffect(() => {
+    window.document.title = "WishList Page"
+  }, [])
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {

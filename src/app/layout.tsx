@@ -5,6 +5,7 @@ import { Toaster } from "react-hot-toast";
 import { HeroProvider } from './_Providers/heroui';
 import WelcomeNavBarComponent from "./_Components/_welcomeNav/navBar";
 import MainUserContext from "./_Context/MainContext";
+import e_commerce_logo from "../../public/e-commerce-logo.svg";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,6 +20,12 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "E-commerce App",
   description: "Sign up for free and start or Login to your account",
+  icons: {
+    icon: [
+      { url: "/e-commerce-logo.svg" },
+      { url: "/favicon.ico" }
+    ],
+  },
 };
 
 export default function RootLayout({

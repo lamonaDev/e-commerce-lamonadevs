@@ -1,6 +1,6 @@
 "use client";
 import { ProtectedRoute } from "@/_routes/route.route";
-import { Suspense, useContext } from "react";
+import { Suspense, useContext, useEffect } from "react";
 import { MainContext } from "@/app/_Context/MainContext";
 import ProductCard from "@/app/_Components/productCard/productCard";
 import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
@@ -215,6 +215,9 @@ function HomeContent() {
 }
 
 export default function Home() {
+  useEffect(() => {
+    window.document.title = "Categories Products"
+  },[])
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {

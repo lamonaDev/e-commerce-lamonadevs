@@ -141,7 +141,6 @@ const loadingItemVariants = {
     }
   }
 };
-
 export default function AllOrdersPage() {
   const { userToken } = useContext(MainContext) as { userToken: string };
   const [orders, setOrders] = useState<Order[]>([]);
@@ -149,11 +148,9 @@ export default function AllOrdersPage() {
   const [error, setError] = useState<string | null>(null);
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
-
   useEffect(() => {
     setIsMounted(true);
   }, []);
-
   async function getUserId(token: string): Promise<string> {
     try {
       const response = await axios.get<VerifyTokenResponse>(
@@ -165,25 +162,21 @@ export default function AllOrdersPage() {
       throw new Error('Failed to verify token');
     }
   }
-
   useEffect(() => {
+    window.document.title = "All Orders"
     const fetchOrders = async () => {
       try {
         if (!userToken) {
           throw new Error('No user token available');
         }
-
         const userId = await getUserId(userToken);
         const response = await fetch(
           `https://ecommerce.routemisr.com/api/v1/orders/user/${userId}`
         );
-
         if (!response.ok) {
           throw new Error('Failed to fetch orders');
         }
-
         const data = await response.json();
-        // Sort orders from newest to oldest
         const sortedOrders = data.sort((a: Order, b: Order) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
@@ -194,22 +187,17 @@ export default function AllOrdersPage() {
         setLoading(false);
       }
     };
-
     fetchOrders();
   }, [userToken]);
-
   const toggleOrderDetails = (orderId: string) => {
     setExpandedOrderId(expandedOrderId === orderId ? null : orderId);
   };
-
   const formatDate = (dateString: string) => {
     return format(new Date(dateString), 'MMM dd, yyyy • h:mm a');
   };
-
   if (!isMounted) {
     return null;
   }
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-8">
@@ -232,7 +220,6 @@ export default function AllOrdersPage() {
             </Button>
             <div className="h-10 bg-gray-200 rounded-lg w-48 mb-8 animate-pulse"></div>
           </motion.div>
-
           {[...Array(3)].map((_, i) => (
             <motion.div
               key={i}
@@ -245,7 +232,6 @@ export default function AllOrdersPage() {
                     <div className="h-6 bg-gray-200 rounded w-32"></div>
                     <div className="h-4 bg-gray-200 rounded w-48"></div>
                   </div>
-
                   <div className="flex items-center gap-6">
                     <div className="space-y-2 text-right">
                       <div className="h-6 bg-gray-200 rounded w-20"></div>
@@ -262,7 +248,6 @@ export default function AllOrdersPage() {
       </div>
     );
   }
-
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-8">

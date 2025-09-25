@@ -1,6 +1,6 @@
 "use client";
 import { ProtectedRoute } from "@/_routes/route.route";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import BrandsPage from "../../_Components/brandsPage/BrandsPage";
 function BrandsLoadingFallback() {
   return (
@@ -29,6 +29,9 @@ function BrandsLoadingFallback() {
 }
 
 export default function BrandsRoute() {
+  useEffect(() => {
+    window.document.title = "Brands Page";
+  }, [])
   return (
     <ProtectedRoute>
       <Suspense fallback={<BrandsLoadingFallback />}>

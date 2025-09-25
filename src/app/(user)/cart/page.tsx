@@ -66,6 +66,7 @@ export default function CartPage() {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    window.document.title = "Cart Page"
     setIsMounted(true);
   }, []);
 

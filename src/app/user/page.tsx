@@ -338,7 +338,6 @@ function UserPageContent() {
   }
   return (
     <div className="container mx-auto px-4 py-8 min-h-screen">
-      {/* Delete Address Modal */}
       <DeleteAddressModal
         isOpen={isDeleteModalOpen}
         onClose={() => {
@@ -528,5 +527,8 @@ function UserPageContent() {
   );
 }
 export default function UserPage() {
+  useEffect(() => {
+    window.document.title = "User Page"
+  }, [])
   return <UserPageContent />;
 }

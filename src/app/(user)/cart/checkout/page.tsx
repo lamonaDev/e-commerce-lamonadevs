@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MainContext } from "@/app/_Context/MainContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios, {AxiosError} from "axios";
@@ -49,6 +49,9 @@ function CartItemDisplay({ item }: { item: CartItem }) {
 }
 
 export default function CheckOutPage() {
+  useEffect(() => {
+    window.document.title = "Check Out"
+  }, [])
   const { userToken, invalidateCart } = useContext(MainContext) as {
     userToken: string | null;
     invalidateCart: () => void;

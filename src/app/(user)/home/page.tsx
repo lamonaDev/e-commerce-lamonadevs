@@ -22,7 +22,6 @@ import ProductsApiService, { ProductsApiResponse } from "../../_Services/product
 import toast from "react-hot-toast";
 import { ProductFromCat } from "../categories/[...slug]/page";
 import { ProtectedRoute } from "@/_routes/route.route";
-
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -97,6 +96,7 @@ export default function Home() {
     }
   };
   useEffect(() => {
+    window.document.title = "Home Page"
     fetchProducts(currentPage);
   }, [currentPage]);
   const handleAddToCart = async (product: ProductFromCat) => {

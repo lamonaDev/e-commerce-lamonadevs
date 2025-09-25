@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
@@ -33,7 +33,9 @@ function SpicificProductContent() {
   });
 
   const product = response?.data;
-
+  useEffect(() => {
+    window.document.title = product?.title ?? "Product Details";
+  }, [])
   if (isLoading) return (
     <div className="flex justify-center items-center h-screen">
       <motion.div

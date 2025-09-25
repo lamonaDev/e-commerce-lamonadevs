@@ -38,6 +38,9 @@ function BrandPageLoadingFallback() {
 }
 
 export default function BrandPage() {
+  useEffect(() => {
+    window.document.title = "Brand Products"
+  }, [])
   const params = useParams();
   const slug = params?.slug as string;
   

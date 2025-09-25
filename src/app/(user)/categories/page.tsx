@@ -1,6 +1,6 @@
 "use client";
 import { ProtectedRoute } from "@/_routes/route.route";
-import { Suspense, useContext, useState } from "react";
+import { Suspense, useContext, useEffect, useState } from "react";
 import { MainContext } from "@/app/_Context/MainContext";
 import { QueryClient, QueryClientProvider, useMutation } from "@tanstack/react-query";
 import axios, { AxiosResponse } from "axios";
@@ -172,6 +172,9 @@ function CategoryContent() {
 }
 
 export default function Home() {
+  useEffect(() => {
+    window.document.title = "Categories Page"
+  }, [])
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
