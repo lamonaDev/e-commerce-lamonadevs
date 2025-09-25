@@ -201,14 +201,14 @@ export default function ProductCard({
       <button
         onClick={handleToggleWishlist}
         disabled={isUpdatingWishlist}
-        className={`absolute top-3 right-3 z-10 p-1.5 md:p-2 rounded-full transition-all duration-200 ${
+        className={` flex flex-col justify-center items-center shadow-2xl absolute top-3 right-3 z-10 p-1.5 md:p-2 w-10 h-10 rounded-full transition-all duration-200 ${
           isWishlisted
-            ? "bg-red-100 text-red-500 hover:bg-red-200"
-            : "bg-white/80 backdrop-blur-sm text-gray-600 hover:bg-white hover:text-red-500"
+            ? "bg-red-100 text-red-500 hover:bg-red-200 shadow-2xl"
+            : "bg-gray-200 backdrop-blur-sm text-gray-600 hover:bg-gray-100 hover:text-red-500 shadow-2xl"
         } shadow-sm disabled:opacity-50`}
         aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
       >
-        <Heart className={`w-4 h-4 md:w-5 md:h-5 ${isWishlisted ? "fill-current" : ""}`} />
+        <Heart className={`w-5 h-5 md:w-5 md:h-5 ${isWishlisted ? "fill-current" : ""}`} />
       </button>
       {discountPercentage > 0 && (
         <div className="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
@@ -226,7 +226,6 @@ export default function ProductCard({
               />
             </div>
           )}
-
           {!imageError ? (
             <img
               src={product.imageCover || product.images?.[0]}
