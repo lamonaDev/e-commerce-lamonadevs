@@ -112,6 +112,7 @@ function SpicificProductContent() {
                 },
               });
             }}
+            onAddToWishlist={() => toast.success("Product Toggeled To WishList Successfully!")}
           />
         </motion.div>
         <motion.div
