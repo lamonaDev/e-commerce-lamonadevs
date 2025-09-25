@@ -9,6 +9,7 @@ import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { FiArrowLeft } from "react-icons/fi";
 import {Brand, Product} from "../../../../../types/all"
+import toast from "react-hot-toast";
 type Subcategory = {
   _id: string;
   name: string;
@@ -48,7 +49,13 @@ type ProductsResponse = {
     numberOfPages: number;
   };
 };
+  const handleAddToCart = async (product: ProductFromCat) => {
+    toast.success("Product added to cart successfully")
+  };
 
+  const handleAddToWishlist = async (product: ProductFromCat) => {
+    toast.success("Product Toggeled To WishList")
+  };
 function HomeContent() {
   const router = useRouter();
   const params = useParams();
@@ -198,7 +205,7 @@ function HomeContent() {
               variants={itemVariants}
               whileHover={{ y: -5 }}
             >
-              <ProductCard product={product} productId={product._id} />
+              <ProductCard product={product} productId={product._id} onAddToCart={handleAddToCart} onAddToWishlist={handleAddToWishlist}/>
             </motion.div>
           ))}
         </motion.div>

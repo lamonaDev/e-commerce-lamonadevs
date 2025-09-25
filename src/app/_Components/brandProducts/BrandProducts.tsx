@@ -6,6 +6,7 @@ import { Grid3X3, List, RefreshCw, Package } from "lucide-react";
 import ProductsApiService, { ProductsApiResponse } from "../../_Services/productsApi";
 import { Brand } from "../brandCard/BrandCard";
 import { ProductFromCat } from "@/app/(user)/categories/[...slug]/page";
+import toast from "react-hot-toast";
 
 interface BrandProductsProps {
   brand: Brand;
@@ -40,7 +41,6 @@ export default function BrandProducts({ brand, className = "" }: BrandProductsPr
       setMetadata(response.metadata);
       setCurrentPage(page);
     } catch (err) {
-      console.error('Error fetching brand products:', err);
       setError('Failed to load products. Please try again.');
     } finally {
       setIsLoading(false);
@@ -62,11 +62,11 @@ export default function BrandProducts({ brand, className = "" }: BrandProductsPr
   };
 
   const handleAddToCart = async (product: ProductFromCat) => {
-    // console.log('Adding to cart:', product.title);
+    toast.success("Product added to cart successfully")
   };
 
   const handleAddToWishlist = async (product: ProductFromCat) => {
-    // console.log('Adding to wishlist:', product.title);
+    toast.success("Product Toggeled To WishList")
   };
 
   if (isLoading) {

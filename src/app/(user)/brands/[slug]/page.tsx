@@ -61,13 +61,11 @@ export default function BrandPage() {
           setError('Brand not found');
         }
       } catch (err) {
-        console.error('Error fetching brand:', err);
         setError('Failed to load brand information');
       } finally {
         setIsLoading(false);
       }
     };
-
     fetchBrandBySlug();
   }, [slug]);
 
