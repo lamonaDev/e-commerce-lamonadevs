@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { MainContext } from "@/app/_Context/MainContext";
 import { motion, AnimatePresence } from "framer-motion";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import {
   Mail,
   Lock,
@@ -66,6 +67,7 @@ const itemVariants = {
 };
 
 function LoginForm() {
+  const [isVisible, setIsVisible] = useState(false);
   const { userToken, setUserToken } = useContext(MainContext) as {
     userToken: string | null;
     setUserToken: (token: string) => void
@@ -182,17 +184,31 @@ function LoginForm() {
                 />
               </motion.div>
               <motion.div variants={itemVariants}>
-                <Input
-                  {...register("password")}
-                  variant="flat"
-                  label="Password"
-                  placeholder="Enter your password"
-                  type="password"
-                  isInvalid={!!errors.password}
-                  errorMessage={errors.password?.message}
-                  className="text-black dark:text-white"
-                  startContent={<Lock className="w-4 h-4 text-gray-500" />}
-                />
+                  <Input
+                    {...register("password")}
+                    variant="flat"
+                    label="Password"
+                    placeholder="Enter your password"
+                    type={isVisible ? "text" : "password"}
+                    isInvalid={!!errors.password}
+                    errorMessage={errors.password?.message}
+                    className="text-black dark:text-white"
+                    startContent={<Lock className="w-4 h-4 text-gray-500" />}
+                    endContent={
+                      <button
+                        className="focus:outline-none"
+                        type="button"
+                        onClick={() => setIsVisible(!isVisible)}
+                        aria-label={isVisible ? "Hide password" : "Show password"}
+                      >
+                        {isVisible ? (
+                          <FaEyeSlash className="w-4 h-4 text-gray-500" />
+                        ) : (
+                          <FaEye className="w-4 h-4 text-gray-500" />
+                        )}
+        </button>
+      }
+    />
               </motion.div>
               <div className="flex justify-between items-center">
                 <Link
