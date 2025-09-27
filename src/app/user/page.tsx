@@ -13,6 +13,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Dialog } from '@headlessui/react';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import UpdateUserModal from "../_Components/updateUserModal/updateUserModal";
+import ChangePasswordModal from "../_Components/updatePassModal/updatePassModal";
 
 const DeleteAddressModal = ({
   isOpen,
@@ -424,8 +426,8 @@ function UserPageContent() {
                       <span>My Orders</span>
                     </div>
                   </Button>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <Button
+                  <div className="grid grid-cols-2 sm:grid-cols-2 gap-3">
+                    {/* <Button
                       variant="flat"
                       color="primary"
                       className="bg-gray-700 hover:bg-gray-600 text-blue-200 hover:text-white py-3 w-full"
@@ -434,15 +436,15 @@ function UserPageContent() {
                         <Lock size={18} />
                         <span className="text-sm">Reset Password</span>
                       </div>
-                    </Button>
+                    </Button> */}
                     <Button
                       variant="flat"
                       color="primary"
-                      className="bg-gray-700 hover:bg-gray-600 text-blue-200 hover:text-white py-3 w-full"
+                      className="bg-gray-700 hover:bg-gray-600 text-blue-200 hover:text-white py-3 w-full col-span-full"
                     >
                       <div className="flex items-center justify-center gap-2">
                         <User size={18} />
-                        <span className="text-sm">Update Profile</span>
+                        <UpdateUserModal/>
                       </div>
                     </Button>
                     <Button
@@ -452,7 +454,7 @@ function UserPageContent() {
                     >
                       <div className="flex items-center justify-center gap-2">
                         <RefreshCw size={18} />
-                        <span className="text-sm">Update Password</span>
+                        <ChangePasswordModal/>
                       </div>
                     </Button>
                   </div>

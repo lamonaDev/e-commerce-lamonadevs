@@ -326,7 +326,7 @@ export default function Home() {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button
                   as={Link}
-                  href="/products"
+                  href="/home"
                   className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg"
                 >
                   Shop Now
@@ -335,6 +335,8 @@ export default function Home() {
               </motion.div>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button
+                  as={Link}
+                  href={"/categories"}
                   variant="bordered"
                   className="px-8 py-4 border-2 border-gray-300 dark:border-gray-600 text-gray-800 dark:text-white font-medium rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
                 >
