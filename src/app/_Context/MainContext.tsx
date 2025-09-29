@@ -1,72 +1,50 @@
 "use client";
-import { createContext, useEffect, useState } from "react";
-import { ContextTestData, ContextTestDataNumber } from "../../../types/ContextTestData";
+import { createContext, useContext, useEffect, useState } from "react";
+import { SessionProvider, useSession } from "next-auth/react";
+import { useQuery, useQueryClient, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useQuery, useQueryClient, QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-interface UserData {
-  message: string;
-  decoded: {
-    id: string;
-    name: string;
-    email: string;
-    role: string;
-  };
+import { Session } from "next-auth";
+declare module "next-auth" {
+  interface Session {
+    accessToken?: string | null;
+  }
 }
-
 interface MainContextType {
-  userToken: string | null;
-  setUserToken: (token: string | null) => void;
-  testData: ContextTestData;
-  number: ContextTestDataNumber;
-  userData: UserData | null;
+  testData: string;
+  number: number;
   numberOfCart: number;
   setNumberOfCart: (value: number) => void;
   invalidateCart: () => Promise<void>;
+  userToken: string | null;
 }
-
 export const MainContext = createContext<MainContextType | undefined>(undefined);
 
 function MainUserContextContent({ children }: { children: React.ReactNode }) {
-  const [userToken, setUserToken] = useState<string | null>(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("token");
-    }
-    return null;
-  });
-  const [userData, setUserData] = useState<UserData | null>(null);
+  const { data: session } = useSession();
   const [numberOfCart, setNumberOfCart] = useState<number>(0);
-  const testData: ContextTestData = "test";
-  const number: ContextTestDataNumber = 123;
+  const testData = "test";
+  const number = 123;
   const queryClient = useQueryClient();
-
-  async function getUserData() {
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const res = await axios.get("https://ecommerce.routemisr.com/api/v1/auth/verifyToken", {
-          headers: { token },
-        });
-        setUserData(res.data);
-      } catch (error) {
-        toast.error("Failed to verify token");
-        setUserToken(null);
-        localStorage.removeItem("token");
-      }
-    } else {
-      setUserData(null);
-    }
-  }
+  const user = session?.user || null;
+  const userToken = session?.accessToken || null;
 
   const { data: cartCount, isError } = useQuery({
     queryKey: ["cartItemCount", userToken],
     queryFn: async () => {
       if (!userToken) return 0;
-      const response = await axios.get("https://ecommerce.routemisr.com/api/v1/cart", {
-        headers: { token: userToken },
-      });
-      return response.data.numOfCartItems || 0;
+      try {
+        const response = await axios.get("https://ecommerce.routemisr.com/api/v1/cart", {
+          headers: { token: userToken },
+        });
+        return response.data.numOfCartItems || 0;
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response?.status === 401) {
+          toast.error("Session expired. Please log in again.");
+          return 0;
+        }
+        throw error;
+      }
     },
     enabled: !!userToken,
     retry: 1,
@@ -84,37 +62,27 @@ function MainUserContextContent({ children }: { children: React.ReactNode }) {
     await queryClient.invalidateQueries({ queryKey: ["cartItemCount", userToken] });
   };
 
-  useEffect(() => {
-    getUserData();
-  }, [userToken]);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      if (userToken) {
-        localStorage.setItem("token", userToken);
-      } else {
-        localStorage.removeItem("token");
-        setUserData(null);
-      }
-    }
-  }, [userToken]);
-
   return (
     <MainContext.Provider
       value={{
-        userToken,
-        setUserToken,
         testData,
         number,
-        userData,
         numberOfCart,
         setNumberOfCart,
-        invalidateCart
+        invalidateCart,
+        userToken,
       }}
     >
       {children}
     </MainContext.Provider>
   );
+}
+export function useMainContext() {
+  const context = useContext(MainContext);
+  if (context === undefined) {
+    throw new Error('useMainContext must be used within a MainUserContextProvider');
+  }
+  return context;
 }
 
 export default function MainUserContext({ children }: { children: React.ReactNode }) {
@@ -126,10 +94,11 @@ export default function MainUserContext({ children }: { children: React.ReactNod
       },
     },
   });
-
   return (
-    <QueryClientProvider client={queryClient}>
-      <MainUserContextContent>{children}</MainUserContextContent>
-    </QueryClientProvider>
+    <SessionProvider>
+      <QueryClientProvider client={queryClient}>
+        <MainUserContextContent>{children}</MainUserContextContent>
+      </QueryClientProvider>
+    </SessionProvider>
   );
 }

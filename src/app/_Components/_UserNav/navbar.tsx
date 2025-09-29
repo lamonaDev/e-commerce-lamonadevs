@@ -10,12 +10,14 @@ import { FaUser, FaBars, FaTimeline } from "react-icons/fa6";
 import { GoSignOut } from "react-icons/go";
 import { MdHome, MdCategory, MdFavorite, MdStore } from "react-icons/md";
 import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 interface NavItem {
   name: string;
   href: string;
   icon: React.ReactNode;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent) => void;
   danger?: boolean;
 }
 
@@ -24,20 +26,22 @@ interface CartData {
 }
 
 interface MainContextType {
-  userToken: string | null;
-  setUserToken: (token: string | null) => void;
+  testData: string;
+  number: number;
   numberOfCart: number;
   setNumberOfCart: (value: number) => void;
-  invalidateCart: () => void;
+  invalidateCart: () => Promise<void>;
+  userToken: string | null;
 }
 
 function UserNavBarContent() {
   const pathname = usePathname();
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   const context = useContext(MainContext) as MainContextType;
-  const { setUserToken, userToken, numberOfCart, setNumberOfCart, invalidateCart } = context;
+  const { userToken, numberOfCart, setNumberOfCart } = context;
 
   const { data: cartData } = useQuery<CartData>({
     queryKey: ["cartItemCount", userToken],
@@ -90,13 +94,24 @@ function UserNavBarContent() {
     setIsMenuOpen(false);
   }, [pathname]);
 
-  function handleLogout() {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("userToken");
-    }
-    setUserToken(null);
-  }
+  const handleLogout = async (e: React.MouseEvent) => {
+    e.preventDefault();
 
+    try {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("userToken");
+      }
+      setNumberOfCart(0);
+      await signOut({
+        redirect: false,
+        callbackUrl: '/'
+      });
+      router.push('/');
+      router.refresh();
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
   const navItems: NavItem[] = [
     { name: "Home", href: "/home", icon: <MdHome size={18} className="mr-2" /> },
     { name: "Cart", href: "/cart", icon: <RiShoppingBasket2Fill size={18} className="mr-2" /> },
@@ -104,7 +119,13 @@ function UserNavBarContent() {
     { name: "Categories", href: "/categories", icon: <MdCategory size={18} className="mr-2" /> },
     { name: "Wishlist", href: "/wishlist", icon: <MdFavorite size={18} className="mr-2" /> },
     { name: "Profile", href: "/user", icon: <FaUser size={18} className="mr-2" /> },
-    { name: "Logout", href: "/", onClick: handleLogout, icon: <GoSignOut size={18} className="mr-2" />, danger: true },
+    {
+      name: "Logout",
+      href: "/",
+      icon: <GoSignOut size={18} className="mr-2" />,
+      onClick: handleLogout,
+      danger: true
+    },
   ];
 
   const cartItemCount = cartData?.numOfCartItems || numberOfCart || 0;
@@ -183,13 +204,11 @@ function UserNavBarContent() {
             <NavbarItem>
               <div>
                 <Button
-                  as={Link}
                   color="danger"
-                  href="/"
-                  onClick={handleLogout}
                   variant="flat"
+                  onClick={handleLogout}
                 >
-                  Log out
+                  <GoSignOut size={20} />
                 </Button>
               </div>
             </NavbarItem>
@@ -202,28 +221,39 @@ function UserNavBarContent() {
           <div className="flex flex-col items-center">
             {navItems.map((item) => (
               <div key={item.name} className="w-full">
-                <Link
-                  href={item.href}
-                  onClick={() => {
-                    if (item.onClick) item.onClick();
-                    setIsMenuOpen(false);
-                  }}
-                  className={`flex items-center justify-center px-4 py-3 text-sm font-medium w-full ${
-                    item.danger
-                      ? "text-red-500 hover:bg-red-50"
-                      : pathname === item.href
-                      ? "text-purple-600 bg-purple-50"
-                      : "text-gray-700 hover:text-purple-600 hover:bg-gray-50"
-                  }`}
-                >
-                  {item.icon}
-                  <span>{item.name}</span>
-                  {item.name === "Cart" && cartItemCount > 0 && (
-                    <span className="ml-2 bg-amber-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                      {cartItemCount}
-                    </span>
-                  )}
-                </Link>
+                {item.name === "Logout" ? (
+                  <button
+                    onClick={item.onClick}
+                    className={`flex items-center justify-center px-4 py-3 text-sm font-medium w-full ${
+                      item.danger
+                        ? "text-red-500 hover:bg-red-50"
+                        : "text-gray-700 hover:text-purple-600 hover:bg-gray-50"
+                    }`}
+                  >
+                    {item.icon}
+                    <span>{item.name}</span>
+                  </button>
+                ) : (
+                  <Link
+                    href={item.href}
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`flex items-center justify-center px-4 py-3 text-sm font-medium w-full ${
+                      item.danger
+                        ? "text-red-500 hover:bg-red-50"
+                        : pathname === item.href
+                        ? "text-purple-600 bg-purple-50"
+                        : "text-gray-700 hover:text-purple-600 hover:bg-gray-50"
+                    }`}
+                  >
+                    {item.icon}
+                    <span>{item.name}</span>
+                    {item.name === "Cart" && cartItemCount > 0 && (
+                      <span className="ml-2 bg-amber-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                        {cartItemCount}
+                      </span>
+                    )}
+                  </Link>
+                )}
               </div>
             ))}
           </div>

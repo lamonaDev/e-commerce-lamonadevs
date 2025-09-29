@@ -1,18 +1,22 @@
 "use client";
-import { useContext, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { MainContext } from '@/app/_Context/MainContext';
+import LoaderPage from "@/app/_Components/laoder/loader";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { userToken } = useContext(MainContext) as { userToken: string | null };
-  const localToken = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
-    if (!localToken) {
+    if (status === "unauthenticated") {
       router.push('/login');
     }
-  }, [router, localToken]);
+  }, [status, router]);
 
-  return userToken ? <>{children}</> : null;
+  if (status === "loading") {
+    return <LoaderPage/>;
+  }
+
+  return session ? <>{children}</> : null;
 }

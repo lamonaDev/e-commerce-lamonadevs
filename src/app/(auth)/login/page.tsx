@@ -1,4 +1,5 @@
 "use client";
+import { signIn } from "next-auth/react";
 import { Input } from "@heroui/input";
 import { Button } from "@heroui/react";
 import Link from "next/link";
@@ -6,12 +7,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation, QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import axios, {AxiosError} from "axios";
-import { Login } from "../../../../interfaces/AUTH";
-import { useState, useContext, useEffect } from "react";
+import axios, { AxiosError } from "axios";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { MainContext } from "@/app/_Context/MainContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import {
@@ -68,10 +67,6 @@ const itemVariants = {
 
 function LoginForm() {
   const [isVisible, setIsVisible] = useState(false);
-  const { userToken, setUserToken } = useContext(MainContext) as {
-    userToken: string | null;
-    setUserToken: (token: string) => void
-  };
   const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
 
@@ -94,14 +89,21 @@ function LoginForm() {
   });
 
   const mutation = useMutation({
-    mutationFn: async (data: Login) => {
-      const response = await axios.post(
-        "https://ecommerce.routemisr.com/api/v1/auth/signin",
-        data
-      );
-      return response.data;
+    mutationFn: async (data: LoginForm) => {
+      // Using NextAuth's signIn instead of direct API call
+      const result = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        throw new Error(result.error);
+      }
+
+      return result;
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.success("Login successful! Welcome back!", {
         icon: <LogIn className="w-5 h-5 text-green-500" />,
         style: {
@@ -109,18 +111,14 @@ function LoginForm() {
           background: '#333',
           color: '#fff',
         }
-      }
-      );
-      const token = data?.token;
-      if (token) {
-        window.localStorage.setItem("token", token);
-        setUserToken(token);
-        router.push("/home");
-        reset();
-      }
+      });
+
+      // Redirect to home after successful login
+      router.push("/home");
+      reset();
     },
-    onError: (error: AxiosError<{message: string}>) => {
-      toast.error(error.response?.data?.message || "Login failed. Please try again.", {
+    onError: (error: Error) => {
+      toast.error(error.message || "Login failed. Please try again.", {
         icon: <AlertCircle className="w-5 h-5 text-red-500" />,
         style: {
           borderRadius: '10px',
@@ -184,31 +182,31 @@ function LoginForm() {
                 />
               </motion.div>
               <motion.div variants={itemVariants}>
-                  <Input
-                    {...register("password")}
-                    variant="flat"
-                    label="Password"
-                    placeholder="Enter your password"
-                    type={isVisible ? "text" : "password"}
-                    isInvalid={!!errors.password}
-                    errorMessage={errors.password?.message}
-                    className="text-black dark:text-white"
-                    startContent={<Lock className="w-4 h-4 text-gray-500" />}
-                    endContent={
-                      <button
-                        className="focus:outline-none"
-                        type="button"
-                        onClick={() => setIsVisible(!isVisible)}
-                        aria-label={isVisible ? "Hide password" : "Show password"}
-                      >
-                        {isVisible ? (
-                          <FaEyeSlash className="w-4 h-4 text-gray-500" />
-                        ) : (
-                          <FaEye className="w-4 h-4 text-gray-500" />
-                        )}
-        </button>
-      }
-    />
+                <Input
+                  {...register("password")}
+                  variant="flat"
+                  label="Password"
+                  placeholder="Enter your password"
+                  type={isVisible ? "text" : "password"}
+                  isInvalid={!!errors.password}
+                  errorMessage={errors.password?.message}
+                  className="text-black dark:text-white"
+                  startContent={<Lock className="w-4 h-4 text-gray-500" />}
+                  endContent={
+                    <button
+                      className="focus:outline-none"
+                      type="button"
+                      onClick={() => setIsVisible(!isVisible)}
+                      aria-label={isVisible ? "Hide password" : "Show password"}
+                    >
+                      {isVisible ? (
+                        <FaEyeSlash className="w-4 h-4 text-gray-500" />
+                      ) : (
+                        <FaEye className="w-4 h-4 text-gray-500" />
+                      )}
+                    </button>
+                  }
+                />
               </motion.div>
               <div className="flex justify-between items-center">
                 <Link
@@ -283,6 +281,9 @@ function LoginForm() {
                   variant="bordered"
                   size="md"
                   className="w-full py-3 text-base font-medium border-2 border-gray-300 dark:border-gray-600"
+                  onClick={() => {
+                    router.push("/home");
+                  }}
                 >
                   <User className="w-4 h-4 mr-2" />
                   Guest Checkout
@@ -314,6 +315,7 @@ function LoginForm() {
     </section>
   );
 }
+
 export default function LoginPage() {
   return (
     <QueryClientProvider client={queryClient}>

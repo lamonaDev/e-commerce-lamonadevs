@@ -182,7 +182,7 @@ const AddressSkeleton = () => (
 
 function UserPageContent() {
   const router = useRouter();
-  const { userToken, userData } = useContext(MainContext) || { userToken: null, userData: null };
+  const { userToken } = useContext(MainContext) || { userToken: null };
   const [imageError, setImageError] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
