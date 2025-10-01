@@ -73,6 +73,10 @@ export const authOptions: NextAuthOptions = {
     })
   ],
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      const vercelUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : process.env.NEXTAUTH_URL;
+      return url.startsWith(baseUrl) ? url : baseUrl;
+    },
     async jwt({ token, user }: { token: JWT; user?: User }) {
       if (user) {
         token.accessToken = user.token;
